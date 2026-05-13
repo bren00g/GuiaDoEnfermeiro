@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nurse Master – Maceió 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #0f2744;
+  --navy2: #1a3a5c;
+  --green: #0ea472;
+  --green2: #0cc07f;
+  --bg: #f0f4f8;
+  --card: #ffffff;
+  --text: #1e2d3d;
+  --muted: #64748b;
+  --border: #e2e8f0;
+  --red: #e53e3e;
+  --amber: #d97706;
+  --purple: #7c3aed;
+  --teal: #0891b2;
+  --pink: #db2777;
+  --lime: #4d7c0f;
+  --orange: #c2410c;
+  --slate: #475569;
+  --blue: #2563eb;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* HEADER */
+.header {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy2) 100%);
+  padding: 18px 16px 0px;
+  position: sticky; top: 0; z-index: 100;
+  box-shadow: 0 4px 20px rgba(15,39,68,0.3);
+}
+.header-top {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.logo-icon {
+  width: 36px; height: 36px; background: var(--green);
+  border-radius: 10px; display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.logo h1 { font-size: 1.2rem; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+.logo small { font-size: 0.7rem; color: rgba(255,255,255,0.6); display: block; margin-top: 1px; }
+
+/* DEV CREDIT */
+.dev-credit {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+  display: block;
+  margin-top: 2px;
+}
+
+.badge {
+  background: rgba(14,164,114,0.2); border: 1px solid rgba(14,164,114,0.4);
+  color: var(--green2); padding: 4px 10px; border-radius: 20px;
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase;
+}
+
+/* MAIN TABS */
+.main-tabs {
+  display: flex; gap: 4px; padding-top: 12px;
+}
+.tab-btn {
+  flex: 1; padding: 12px 0; background: rgba(255,255,255,0.05);
+  border: none; border-radius: 12px 12px 0 0; color: rgba(255,255,255,0.6);
+  font-family: 'DM Sans', sans-serif; font-size: 0.9rem; font-weight: 600;
+  cursor: pointer; transition: all 0.2s;
+}
+.tab-btn.active {
+  background: var(--bg); color: var(--navy);
+}
+
+/* SEARCH */
+.search-wrap { position: relative; padding: 14px 16px; background: var(--bg); }
+.search-icon {
+  position: absolute; left: 28px; top: 50%; transform: translateY(-50%);
+  color: var(--muted); font-size: 16px; pointer-events: none;
+}
+#searchInput {
+  width: 100%; padding: 11px 16px 11px 38px;
+  background: #fff; border: 1px solid var(--border);
+  border-radius: 10px; font-size: 0.95rem; font-family: 'DM Sans', sans-serif;
+  color: var(--text); outline: none; transition: all 0.2s;
+}
+#searchInput:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(14,164,114,0.1); }
+.clear-btn {
+  position: absolute; right: 26px; top: 50%; transform: translateY(-50%);
+  background: none; border: none; color: var(--muted);
+  font-size: 18px; cursor: pointer; display: none; padding: 2px 6px;
+}
+
+/* FILTERS */
+.filter-bar {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 10px 0 10px 16px; overflow-x: auto; display: flex; gap: 8px;
+  scrollbar-width: none;
+}
+.filter-bar::-webkit-scrollbar { display: none; }
+.filter-bar { padding-right: 16px; }
+.filter-btn {
+  display: flex; align-items: center; gap: 6px;
+  padding: 7px 14px; border-radius: 20px; font-size: 0.82rem;
+  font-family: 'DM Sans', sans-serif; font-weight: 500;
+  white-space: nowrap; cursor: pointer; transition: all 0.18s;
+  border: 1.5px solid transparent;
+}
+.filter-btn .dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* VACCINE FILTERS (Sub-tabs) */
+.vacina-filters {
+  background: var(--card); border-bottom: 1px solid var(--border);
+  padding: 10px 16px; display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none;
+}
+.vacina-filters::-webkit-scrollbar { display: none; }
+.v-btn {
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: #f8fafc; color: var(--muted); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: 0.2s;
+}
+.v-btn.active {
+  background: var(--blue); color: #fff; border-color: var(--blue);
+}
+
+/* RESULTS BAR */
+.results-bar {
+  padding: 10px 16px 6px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.results-count { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
+.results-count span { color: var(--navy); font-weight: 700; }
+
+/* CARDS COMMON */
+#lista, #lista-vacinas { padding: 4px 16px 80px; }
+.card {
+  background: var(--card); border-radius: 14px; margin-bottom: 12px; overflow: hidden;
+  box-shadow: 0 1px 4px rgba(15,39,68,0.08); border: 1px solid var(--border);
+  animation: fadeUp 0.25s ease both;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* MED CARDS */
+.card-top { display: flex; align-items: stretch; }
+.card-stripe { width: 5px; flex-shrink: 0; }
+.card-body { flex: 1; padding: 13px 14px 12px; }
+.card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.card-name { font-size: 1rem; font-weight: 700; color: var(--navy); line-height: 1.2; }
+.card-conc { font-family: 'DM Mono', monospace; font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+.cat-tag { font-size: 0.65rem; font-weight: 600; padding: 3px 8px; border-radius: 20px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.3px; text-transform: uppercase; }
+.info-row { display: flex; align-items: flex-start; gap: 6px; margin-bottom: 4px; font-size: 0.85rem; }
+.info-label { color: var(--muted); font-size: 0.78rem; font-weight: 500; flex-shrink: 0; min-width: 70px; }
+.info-val { color: var(--text); font-size: 0.85rem; line-height: 1.35; }
+.respaldo { margin-top: 8px; padding: 8px 10px; background: #f8fafc; border-radius: 8px; border-left: 3px solid #cbd5e1; font-size: 0.75rem; color: var(--muted); line-height: 1.4; }
+.respaldo strong { color: #475569; font-size: 0.72rem; display: block; margin-bottom: 2px; letter-spacing: 0.3px; text-transform: uppercase; }
+.copy-btn { width: 100%; padding: 11px; background: var(--navy); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 0.82rem; font-weight: 600; letter-spacing: 0.5px; cursor: pointer; transition: background 0.18s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.copy-btn:active { background: var(--green); }
+
+/* VACCINE TIMELINE */
+.timeline-group { margin-bottom: 20px; position: relative; padding-left: 16px; }
+.timeline-group::before {
+  content: ''; position: absolute; left: 0; top: 8px; bottom: -20px;
+  width: 2px; background: var(--border);
+}
+.timeline-age {
+  font-size: 0.85rem; font-weight: 700; color: var(--blue);
+  background: var(--bg); padding: 4px 0; margin-bottom: 12px;
+  position: relative; display: inline-block;
+}
+.timeline-age::before {
+  content: ''; position: absolute; left: -21px; top: 50%; transform: translateY(-50%);
+  width: 12px; height: 12px; border-radius: 50%; background: #fff;
+  border: 3px solid var(--blue); z-index: 2;
+}
+.vac-item {
+  background: #fff; border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+.vac-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.vac-name { font-weight: 700; color: var(--text); font-size: 0.95rem; }
+.vac-via { font-family: 'DM Mono', monospace; font-size: 0.7rem; font-weight: 600; background: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; }
+.vac-dose { font-size: 0.8rem; color: var(--green); font-weight: 600; margin-bottom: 4px; }
+.vac-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.4; }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(10px);
+  background: var(--navy); color: #fff; padding: 10px 22px;
+  border-radius: 30px; font-size: 0.85rem; font-weight: 500;
+  display: flex; align-items: center; gap: 8px; box-shadow: 0 8px 24px rgba(15,39,68,0.35);
+  opacity: 0; transition: all 0.25s; pointer-events: none; z-index: 999; white-space: nowrap;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* CATEGORY COLORS */
+.c-ist { --cc: #7c3aed; }
+.c-contra { --cc: #db2777; }
+.c-pep { --cc: #e53e3e; }
+.c-mulher { --cc: #d97706; }
+.c-prenatal { --cc: #0891b2; }
+.c-crianca { --cc: #16a34a; }
+.c-tb { --cc: #92400e; }
+.c-cronicas { --cc: #0ea472; }
+.c-tabagismo { --cc: #64748b; }
+.c-dengue { --cc: #ea580c; }
+.c-outros { --cc: #6366f1; }
+.card-stripe { background: var(--cc, #ccc); }
+.cat-tag { background: color-mix(in srgb, var(--cc, #ccc) 12%, transparent); color: var(--cc, #888); border: 1px solid color-mix(in srgb, var(--cc, #ccc) 25%, transparent); }
+.dot { background: var(--cc, #ccc); }
+.filter-btn.active { background: var(--cc, var(--navy)); border-color: var(--cc, var(--navy)); color: #fff; }
+.filter-btn.active .dot { background: rgba(255,255,255,0.8); }
+.filter-btn:not(.active) { background: #f8fafc; border-color: var(--border); color: var(--muted); }
+
+/* EMPTY STATE MEDS */
+.empty { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-icon { font-size: 40px; margin-bottom: 12px; }
+.empty h3 { font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+
+/* ========================================= */
+/* FOOTER */
+/* ========================================= */
+.footer-wrapper { margin-top: auto; }
+.footer {
+  background: var(--navy); padding: 20px;
+  text-align: center; border-top: 1px solid rgba(255,255,255,0.08);
+}
+.footer-content { display: flex; flex-direction: column; gap: 4px; color: #fff; font-size: 0.82rem; }
+.footer-content span { color: rgba(255,255,255,0.7); }
+
+/* ========================================= */
+/* SOAP / EVOLUÇÕES */
+/* ========================================= */
+#lista-evolucoes { padding: 14px 16px 90px; }
+.e-btn {
+  padding: 6px 14px; border-radius: 8px; border: 1px solid var(--border);
+  background: #f8fafc; color: var(--muted); font-size: 0.85rem; font-weight: 600;
+  cursor: pointer; white-space: nowrap; transition: 0.2s;
+}
+.e-btn.active { background: var(--green); color: #fff; border-color: var(--green); }
+.soap-card {
+  background: #fff; border-radius: 14px; padding: 14px; margin-bottom: 16px;
+  border: 1px solid var(--border); box-shadow: 0 1px 4px rgba(15,39,68,0.08);
+  animation: fadeUp 0.25s ease both;
+}
+.soap-header { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: 16px; }
+.soap-section { margin-bottom: 18px; }
+.soap-section h3 { font-size: 0.85rem; color: var(--green); margin-bottom: 8px; }
+.soap-section pre {
+  white-space: pre-wrap; font-family: 'DM Sans', sans-serif; font-size: 0.82rem;
+  line-height: 1.5; background: #f8fafc; padding: 12px; border-radius: 10px;
+  border: 1px solid var(--border); color: var(--text);
+}
+.soap-btn {
+  width: 100%; margin-top: 8px; border: none; background: var(--navy);
+  color: #fff; padding: 10px; border-radius: 8px; font-size: 0.8rem;
+  font-weight: 600; cursor: pointer; transition: 0.2s;
+}
+.soap-btn:active { background: var(--green); }
+.soap-full { background: var(--green); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div class="logo-icon">💊</div>
+      <div>
+        <h1>Nurse Master</h1>
+        <small>USF Village Campestre II · Maceió</small>
+        <small class="dev-credit">APP desenvolvido por Breno Gomes</small>
+      </div>
+    </div>
+    <div class="badge">Res. 801/2026</div>
+  </div>
+  
+  <div class="main-tabs">
+    <button class="tab-btn active" id="tab-meds" onclick="switchView('meds')">💊 Prescrições</button>
+    <button class="tab-btn" id="tab-vacinas" onclick="switchView('vacinas')">💉 Calendário Vacinal</button>
+    <button class="tab-btn" id="tab-evolucoes" onclick="switchView('evolucoes')">📝 Evoluções</button>
+  </div>
+</div>
+
+<div id="view-meds">
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="searchInput" placeholder="Buscar medicamento ou indicação...">
+    <button class="clear-btn" id="clearBtn" onclick="limparBusca()">✕</button>
+  </div>
+  <div class="filter-bar" id="filterBar"></div>
+  <div class="results-bar">
+    <div class="results-count" id="resultsCount"></div>
+  </div>
+  <div id="lista"></div>
+</div>
+
+<div id="view-vacinas" style="display: none;">
+  <div class="vacina-filters" id="vacinaFilters"></div>
+  <div id="lista-vacinas"></div>
+</div>
+
+<div id="view-evolucoes" style="display:none;">
+  <div class="vacina-filters" id="evolucaoFilters"></div>
+  <div id="lista-evolucoes"></div>
+</div>
+
+<div class="footer-wrapper">
+  <footer class="footer">
+    <div class="footer-content">
+      <strong>Breno Gomes</strong>
+      <span>breno.monteiro@eenf.ufal.br</span>
+    </div>
+  </footer>
+</div>
+
+<div id="toast" class="toast">✓ Copiado!</div>
+
+<script>
+// ==========================================
+// DADOS DE MEDICAMENTOS
+// ==========================================
+const CATS = [
+  { id: "Todos",     label: "Todos",         cc: "#0f2744" },
+  { id: "IST",       label: "IST",           cc: "#7c3aed" },
+  { id: "Contra",    label: "Contracepção",  cc: "#db2777" },
+  { id: "PEP",       label: "PEP / PrEP",    cc: "#e53e3e" },
+  { id: "Mulher",    label: "Saúde da Mulher",cc: "#d97706" },
+  { id: "Prenatal",  label: "Pré-natal",     cc: "#0891b2" },
+  { id: "Crianca",   label: "Criança",       cc: "#16a34a" },
+  { id: "TB",        label: "TB & Hanseníase",cc: "#92400e" },
+  { id: "Cronicas",  label: "Crônicas",      cc: "#0ea472" },
+  { id: "Tabagismo", label: "Tabagismo",     cc: "#64748b" },
+  { id: "Dengue",    label: "Dengue",        cc: "#ea580c" },
+  { id: "Outros",    label: "Outros",        cc: "#6366f1" }
+];
+
+const MEDS = [
+  // IST
+  { n:"Aciclovir", c:"200mg", a:"Comprimido", u:"Herpes genital", r:"PCDT IST – manejo de herpes genital", cat:"IST" },
+  { n:"Benzilpenicilina benzatina", c:"1,2 milhão UI", a:"Suspensão injetável", u:"Sífilis (recente e tardia)", r:"PCDT IST – sífilis; Portaria MS nº 156/2006", cat:"IST" },
+  { n:"Doxiciclina", c:"100mg", a:"Comprimido", u:"Sífilis alternativa (não gestantes); donovanose; uretrites", r:"PCDT IST – sífilis", cat:"IST" },
+  { n:"Azitromicina", c:"500mg / 1g", a:"Comprimido", u:"Uretrites, cervicites, clamídia, cancro mole", r:"PCDT IST – uretrite não gonocócica, clamídia, cancro mole", cat:"IST" },
+  { n:"Ceftriaxona", c:"500mg / 1g", a:"Pó para solução injetável", u:"Gonorreia, síndromes genitais complicadas, DIP", r:"PCDT IST – gonorreia, DIP e outras IST", cat:"IST" },
+  { n:"Ciprofloxacino", c:"500mg", a:"Comprimido", u:"Cancroide, Donovanose", r:"PCDT IST – cancroide, donovanose", cat:"IST" },
+  { n:"Metronidazol", c:"250mg / 400mg / 100mg/g (gel)", a:"Comprimido / Gel vaginal", u:"Tricomoníase, vaginose bacteriana, Giardia lamblia", r:"PCDT IST – vaginose bacteriana e tricomoníase", cat:"IST" },
+  { n:"Secnidazol", c:"1g", a:"Comprimido", u:"Tricomoníase (alternativa)", r:"PCDT IST – alternativa para tricomoníase", cat:"IST" },
+  { n:"Nistatina", c:"100.000 UI", a:"Creme vaginal", u:"Candidíase vulvovaginal (tópico)", r:"PCDT IST – candidíase vulvovaginal (opção tópica)", cat:"IST" },
+  { n:"Miconazol", c:"20mg/g", a:"Creme vaginal", u:"Candidíase vulvovaginal (tópico)", r:"PCDT IST – candidíase vulvovaginal (opção tópica)", cat:"IST" },
+  { n:"Fluconazol", c:"150mg", a:"Comprimido", u:"Candidíase vaginal (via oral)", r:"PCDT IST – candidíase vulvovaginal (opção oral)", cat:"IST" },
+  { n:"Itraconazol", c:"100mg", a:"Comprimido", u:"Candidíase vaginal (via oral)", r:"PCDT IST – candidíase vulvovaginal (opção oral)", cat:"IST" },
+  { n:"Clindamicina", c:"300mg", a:"Comprimido", u:"Vaginose bacteriana e uretrite por Trichomonas vaginalis", r:"PCDT IST – vaginose bacteriana", cat:"IST" },
+  { n:"Ácido tricloroacético (ATA)", c:"80–90%", a:"Solução tópica", u:"Verrugas anogenitais (HPV)", r:"PCDT IST – manejo de verrugas anogenitais/HPV", cat:"IST" },
+  { n:"Podofilina", c:"10–25%", a:"Solução tópica", u:"Verrugas anogenitais (HPV)", r:"PCDT IST – verrugas anogenitais/HPV", cat:"IST" },
+  { n:"Imiquimode", c:"50mg/g", a:"Creme", u:"Verrugas anogenitais (HPV)", r:"PCDT IST – verrugas anogenitais/HPV", cat:"IST" },
+
+  // CONTRACEPÇÃO
+  { n:"Etinilestradiol + Levonorgestrel", c:"0,03mg + 0,15mg", a:"Comprimido", u:"Contracepção hormonal combinada oral", r:"Caderno AB nº 26 e Protocolos AB: Saúde das Mulheres, 2016", cat:"Contra" },
+  { n:"Etinilestradiol + Desogestrel", c:"20mcg + 150mcg / 30mcg + 150mcg", a:"Comprimido", u:"Contracepção hormonal combinada oral", r:"Caderno AB nº 26 e Protocolos AB: Saúde das Mulheres, 2016", cat:"Contra" },
+  { n:"Etinilestradiol + Gestodeno", c:"15mcg+60mcg / 20mcg+75mcg / 30mcg+75mcg", a:"Cartela de 21 ou 28 Comprimidos", u:"Contracepção hormonal combinada oral", r:"Caderno AB nº 26 – métodos hormonais combinados", cat:"Contra" },
+  { n:"Desogestrel", c:"75μg", a:"Comprimido", u:"Contracepção só com progestagênio", r:"Caderno AB nº 26 – progestagênicos orais", cat:"Contra" },
+  { n:"Noretisterona", c:"0,35mg", a:"Comprimido", u:"Contracepção só com progestagênio", r:"Caderno AB nº 26 – progestagênicos orais", cat:"Contra" },
+  { n:"Acetato de Medroxiprogesterona", c:"150mg", a:"Suspensão injetável", u:"Anticoncepcional injetável trimestral", r:"Caderno AB nº 26 – contraceptivo injetável trimestral", cat:"Contra" },
+  { n:"Medroxiprogesterona + Cipionato de Estradiol", c:"25mg + 5mg", a:"Suspensão injetável", u:"Anticoncepcional injetável mensal combinado", r:"Caderno AB nº 26 – contraceptivos injetáveis mensais", cat:"Contra" },
+  { n:"Enantato de Noretisterona + Valerato de Estradiol", c:"50mg + 5mg", a:"Solução injetável", u:"Anticoncepcional injetável mensal combinado", r:"Caderno AB nº 26 – métodos injetáveis combinados", cat:"Contra" },
+  { n:"Etonogestrel + Etinilestradiol", c:"0,120mg + 0,015mg", a:"Anel vaginal", u:"Contracepção hormonal via anel vaginal", r:"Caderno AB nº 26 – contraceptivos vaginais", cat:"Contra" },
+  { n:"Levonorgestrel", c:"0,75mg / 1,5mg", a:"Comprimido", u:"Contracepção de emergência", r:"Caderno AB nº 26 e Protocolos AB: Saúde das Mulheres, 2016", cat:"Contra" },
+  { n:"Implante subdérmico de Etonogestrel", c:"68mg", a:"Implante subdérmico", u:"Contracepção de longa duração (LARC)", r:"Caderno AB nº 26 e Notas Técnicas MS sobre implante de etonogestrel na APS", cat:"Contra" },
+  { n:"DIU de Cobre", c:"TCu 380A", a:"Dispositivo intrauterino", u:"Contracepção LARC não hormonal", r:"Caderno AB nº 26; Rede Cegonha e diretrizes de planejamento reprodutivo", cat:"Contra" },
+  { n:"DIU Hormonal – Levonorgestrel", c:"19,5mg / 52mg", a:"Dispositivo intrauterino", u:"Contracepção LARC com liberação hormonal local", r:"Caderno AB nº 26 – saúde sexual e reprodutiva", cat:"Contra" },
+
+  // PEP / PrEP
+  { n:"Dolutegravir (DTG)", c:"50mg", a:"Comprimido", u:"PEP e tratamento do HIV", r:"PCDT para Manejo da Infecção pelo HIV em Adultos; normas de PEP sexual/ocupacional", cat:"PEP" },
+  { n:"Lamivudina (3TC)", c:"150mg", a:"Comprimido", u:"PEP e tratamento do HIV", r:"PCDT HIV – combinações TDF/3TC/DTG", cat:"PEP" },
+  { n:"Tenofovir (TDF)", c:"300mg", a:"Comprimido", u:"PEP e tratamento do HIV", r:"PCDT HIV e normas de PEP sexual/ocupacional", cat:"PEP" },
+  { n:"TDF + Lamivudina", c:"300mg + 300mg", a:"Comprimido (dose fixa combinada)", u:"Antirretroviral em combination – tratamento/PEP", r:"PCDT HIV – combination em dose fixa TDF/3TC", cat:"PEP" },
+  { n:"Zidovudina/Lamivudina (AZT/3TC)", c:"300mg + 150mg", a:"Comprimido", u:"Esquema alternativo de PEP", r:"PCDT HIV e normas de PEP sexual/ocupacional", cat:"PEP" },
+  { n:"Darunavir (DRV) + Ritonavir (RTV)", c:"800mg + 100mg", a:"Comprimido", u:"Esquema alternativo de PEP", r:"PCDT HIV e normas de PEP sexual/ocupacional", cat:"PEP" },
+  { n:"TDF + Entricitabina (FTC) – PrEP", c:"300mg + 200mg", a:"Comprimido", u:"Profilaxia Pré-Exposição ao HIV (PrEP)", r:"PCDT para Profilaxia Pré-Exposição (PrEP) Oral à Infecção pelo HIV", cat:"PEP" },
+
+  // SAÚDE DA MULHER
+  { n:"Dipirona", c:"500–1.000mg", a:"Comprimido", u:"Analgésico / Antitérmico", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Paracetamol", c:"500–750mg", a:"Comprimido", u:"Analgésico / Antitérmico", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Ibuprofeno", c:"300–600mg", a:"Comprimido", u:"Analgésico / Antitérmico / Dismenorreia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Diclofenaco", c:"50mg", a:"Comprimido", u:"Dismenorreia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Escopolamina", c:"10mg", a:"Comprimido", u:"Antiespasmódico / Dismenorreia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Piroxicam", c:"20mg", a:"Comprimido", u:"Dismenorreia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Nimesulida", c:"100mg", a:"Comprimido", u:"Dismenorreia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Estriol", c:"1mg/g", a:"Creme vaginal", u:"Ressecamento vaginal / Colpite atrófica", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Nitrofurantoína", c:"100mg", a:"Comprimido", u:"ITU não complicada (1ª linha)", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Sulfametoxazol + Trimetoprima", c:"800mg + 160mg", a:"Comprimido", u:"ITU não complicada (1ª linha)", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Ciprofloxacino", c:"500mg", a:"Comprimido", u:"ITU não complicada (2ª linha – resistência a 1ª linha)", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Levofloxacino", c:"750mg", a:"Comprimido", u:"ITU não complicada (2ª linha – resistência a 1ª linha)", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+  { n:"Sulfato ferroso", c:"40mg de ferro elementar", a:"Comprimido", u:"Suplementação no puerpério / Anemia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Mulher" },
+
+  // PRÉ-NATAL
+  { n:"Ácido Fólico", c:"5mg", a:"Comprimido / Solução oral / Cápsula", u:"Suplementação pré-natal; prevenção de defeitos do tubo neural; anemia megaloblástica", r:"Caderno AB nº 32; Protocolos AB: Saúde das Mulheres, 2016; Programas de Suplementação de Micronutrientes", cat:"Prenatal" },
+  { n:"Ácido Acetilsalicílico", c:"100mg", a:"Comprimido", u:"Profilaxia de pré-eclâmpsia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Carbonato de Cálcio", c:"1.250mg (= 500mg de cálcio elementar)", a:"Comprimido", u:"Prevenção de pré-eclâmpsia em gestantes", r:"Nota Técnica nº 04/2025 – CAITS Maceió", cat:"Prenatal" },
+  { n:"Alfa-metildopa", c:"250mg", a:"Comprimido", u:"Hipertensão arterial na gestação", r:"Caderno AB nº 32; Protocolos AB: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Nifedipina", c:"20mg", a:"Comprimido", u:"Hipertensão arterial na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Aciclovir", c:"200mg", a:"Comprimido", u:"Herpes simples na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Amoxicilina", c:"500mg", a:"Cápsula", u:"Antibioticoterapia na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Ampicilina", c:"500mg", a:"Comprimido", u:"Antibioticoterapia na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Azitromicina", c:"500mg", a:"Comprimido", u:"Antibioticoterapia na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Cefalexina", c:"500mg", a:"Cápsula", u:"ITU / Bacteriúria em gestantes", r:"Protocolos AB: Saúde das Mulheres, 2016; Nota Técnica nº 001/2022 – CAITS Maceió", cat:"Prenatal" },
+  { n:"Ceftriaxona", c:"250mg / 500mg / 1.000mg", a:"Pó para solução injetável", u:"ITU / Cervicite na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Eritromicina", c:"500mg", a:"Cápsula / Comprimido", u:"Antibioticoterapia na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Nitrofurantoína", c:"100mg", a:"Comprimido", u:"Infecção urinária na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Penicilina Benzatina", c:"1.200.000 UI", a:"Pó para solução injetável", u:"Sífilis na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Metronidazol", c:"250mg / 5% (creme)", a:"Comprimido / Creme vaginal", u:"Corrimento vaginal na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Dimenidrato + Piridoxina", c:"50mg + 10mg", a:"Comprimido", u:"Antiemético na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Metoclopramida", c:"10mg / 4mg/ml", a:"Comprimido / Solução oral", u:"Antiemético / Hiperêmese gravídica", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Dimeticona", c:"40–120mg", a:"Comprimido", u:"Flatulência na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Dipirona", c:"500mg", a:"Comprimido / Solução oral 500mg/ml", u:"Analgésico / Antitérmico na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Paracetamol", c:"500mg / 100mg/ml", a:"Comprimido / Solução oral", u:"Analgésico / Antitérmico na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Hidróxido de Alumínio", c:"200mg / 35,6+37mg/ml", a:"Comprimido mastigável / Suspensão oral", u:"Pirose (azia) na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Hioscina / Butilescopolamina", c:"10mg", a:"Comprimido", u:"Cólicas na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Mebendazol", c:"150mg / 20mg/ml", a:"Comprimido / Suspensão oral", u:"Helmintíase na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Sulfato Ferroso", c:"40mg / 25mg/ml", a:"Comprimido / Solução oral", u:"Suplementação no pré-natal / Anemia", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Tiabendazol", c:"500mg", a:"Comprimido", u:"Estrongiloidíase na gestação", r:"Protocolos da Atenção Básica: Saúde das Mulheres, 2016", cat:"Prenatal" },
+  { n:"Amoxicilina + Clavulanato (ITU gestante)", c:"500mg + 125mg", a:"Comprimido", u:"ITU em gestantes (1 comp 8/8h por 7 a 10 dias)", r:"Nota Técnica nº 001/2022 – CAITS Maceió", cat:"Prenatal" },
+
+  // CRIANÇA
+  { n:"Amoxicilina", c:"250mg/5ml", a:"Suspensão oral", u:"Pneumonia, infecção aguda do ouvido, infecção de garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Amoxicilina + Clavulanato", c:"250mg/5ml", a:"Suspensão oral", u:"Pneumonia, infecção do ouvido ou garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Eritromicina", c:"250mg/5ml", a:"Suspensão oral", u:"Pneumonia, infecção do ouvido ou garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Penicilina Benzatina", c:"600.000 UI / 1.200.000 UI", a:"Pó para suspensão injetável", u:"Infecção moderada de garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Ceftriaxona", c:"500mg", a:"Pó para suspensão injetável", u:"Disenteria na criança", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Sulfametoxazol + Trimetoprima", c:"200mg + 40mg/5ml", a:"Suspensão oral", u:"Disenteria / Cólera", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Azitromicina", c:"200mg/5ml", a:"Suspensão oral", u:"Cólera na criança", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Paracetamol", c:"200mg/ml", a:"Solução oral (gotas)", u:"Febre, dor de ouvido, dor de garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Dipirona", c:"500mg/ml", a:"Solução oral (gotas)", u:"Febre, dor de ouvido, dor de garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Ibuprofeno", c:"50mg/ml", a:"Solução oral", u:"Febre, dor de ouvido, dor de garganta", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Ondansetrona", c:"4mg", a:"Comprimido dispersível", u:"Desidratação (Plano B) com vômitos persistentes", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Sais de Reidratação Oral (SRO)", c:"Na 45 / K 20 / Glicose 75 mmol/L", a:"Pó para solução oral", u:"Desidratação", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Mebendazol", c:"100mg/5ml", a:"Suspensão oral", u:"Verminose / Anemia", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Albendazol", c:"40mg/ml / 400mg", a:"Suspensão oral / Comprimido", u:"Verminose / Anemia", r:"AIDPI Criança: 2 meses a 5 anos, 2017", cat:"Crianca" },
+  { n:"Sulfato Ferroso", c:"5mg/ml / 25mg/ml", a:"Xarope / Solução oral", u:"Suplementação profilática / Anemia", r:"AIDPI Criança 2017 e Caderno Programas de Micronutrientes", cat:"Crianca" },
+  { n:"Vitamina A", c:"100.000 UI / 200.000 UI", a:"Solução oral", u:"Suplementação em crianças e puérperas em áreas prioritárias", r:"Programa Nacional de Suplementação de Vitamina A (PNSVA)", cat:"Crianca" },
+  { n:"Nistatina", c:"100.000 UI/mL", a:"Suspensão oral", u:"Candidíase oral na criança", r:"AIDPI Neonatal, 2014", cat:"Crianca" },
+  { n:"Cefalexina", c:"250mg/5ml", a:"Suspensão oral", u:"Pústulas na pele ou infecção no umbigo", r:"AIDPI Neonatal, 2014", cat:"Crianca" },
+  { n:"Mupirocina", c:"20mg/g", a:"Pomada dermatológica", u:"Pústulas na pele ou infecção no umbigo", r:"AIDPI Neonatal, 2014", cat:"Crianca" },
+  { n:"Neomicina + Bacitracina", c:"5mg/g + 250UI/g", a:"Pomada dermatológica", u:"Pústulas na pele ou infecção no umbigo", r:"AIDPI Neonatal, 2014", cat:"Crianca" },
+
+  // TB & HANSENÍASE
+  { n:"Isoniazida", c:"100mg / 300mg", a:"Comprimido", u:"Tuberculose e Infecção Latente de TB (ILTB)", r:"Manual de Recomendações para Controle da TB – esquemas 2RHZE/4RH e ILTB", cat:"TB" },
+  { n:"Rifampicina", c:"300mg", a:"Cápsula", u:"Tuberculose e hanseníase", r:"Manual de TB e Diretrizes de Hanseníase – esquemas RH e PQT", cat:"TB" },
+  { n:"Pirazinamida", c:"500mg", a:"Comprimido", u:"Tuberculose – fase intensiva", r:"Manual de TB – componente Z do esquema RHZE", cat:"TB" },
+  { n:"Cloridrato de Etambutol", c:"400mg", a:"Comprimido", u:"Tuberculose – fase intensiva", r:"Manual de TB – componente E do esquema RHZE", cat:"TB" },
+  { n:"RHZE (dose fixa combinada)", c:"150/75/400/275mg", a:"Comprimido combinado", u:"TB – esquema básico adultos e adolescentes (≥10 anos)", r:"Manual de TB – Esquema Básico para tratamento da TB em adultos", cat:"TB" },
+  { n:"RH (dose fixa combinada)", c:"300/150mg ou 150/75mg", a:"Comprimido combinado", u:"Tuberculose – fase de manutenção", r:"Manual de TB – Esquema Básico para tratamento da TB em adultos", cat:"TB" },
+  { n:"Dapsona", c:"50mg / 100mg", a:"Comprimido", u:"Hanseníase – PQT (paucibacilar e multibacilar)", r:"Diretrizes para vigilância, atenção e eliminação da Hanseníase", cat:"TB" },
+  { n:"Clofazimina", c:"50mg / 100mg", a:"Cápsula", u:"Hanseníase – PQT multibacilar", r:"Diretrizes de Hanseníase – PQT clofazimina diária e mensal", cat:"TB" },
+  { n:"Rifapentina + Isoniazida (1HP)", c:"150mg + 300mg", a:"Comprimido", u:"Tratamento de Infecção Latente de TB (ILTB)", r:"Nota Informativa MS nº 4/2024", cat:"TB" },
+
+  // CRÔNICAS
+  { n:"Metformina", c:"500mg / 850mg", a:"Comprimido (inclusive liberação prolongada)", u:"Diabetes Mellitus", r:"Caderno de AB nº 36 – Estratégias para cuidado da pessoa com DM", cat:"Cronicas" },
+  { n:"Gliclazida", c:"30mg / 60mg / 80mg", a:"Comprimido de liberação controlada", u:"Diabetes Mellitus", r:"Caderno AB nº 36 – DM", cat:"Cronicas" },
+  { n:"Glibenclamida", c:"5mg", a:"Comprimido", u:"Diabetes Mellitus", r:"Caderno AB nº 36 – DM", cat:"Cronicas" },
+  { n:"Insulina NPH Humana", c:"100 UI/ml", a:"Suspensão injetável", u:"Diabetes Mellitus", r:"Caderno AB nº 36 – DM", cat:"Cronicas" },
+  { n:"Insulina Regular Humana", c:"100 UI/ml", a:"Solução injetável", u:"Diabetes Mellitus", r:"Caderno AB nº 36 – DM", cat:"Cronicas" },
+  { n:"Hidroclorotiazida", c:"12,5mg / 25mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Furosemida", c:"40mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Espironolactona", c:"25mg / 100mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Atenolol", c:"50mg / 100mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Succinato de Metoprolol", c:"25mg / 50mg / 100mg", a:"Comprimido de liberação controlada", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Carvedilol", c:"3,125mg / 6,5mg / 12,5mg / 25mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Propranolol", c:"10mg / 40mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Metildopa", c:"250mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Nifedipina", c:"10mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Besilato de Anlodipino", c:"5mg / 10mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Cloridrato de Verapamil", c:"80mg / 120mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Cloridrato de Hidralazina", c:"25mg / 50mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Maleato de Enalapril", c:"5mg / 10mg / 20mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Captopril", c:"25mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial", cat:"Cronicas" },
+  { n:"Losartana Potássica", c:"50mg", a:"Comprimido", u:"Hipertensão Arterial", r:"Caderno AB nº 37 – Hipertensão Arterial; Caderno AB nº 14 – prevenção cardiovascular", cat:"Cronicas" },
+  { n:"Ácido Acetilsalicílico", c:"100mg", a:"Comprimido", u:"Prevenção secundária de eventos cardiovasculares", r:"Caderno AB nº 14 – Prevenção clínica de DCV na Atenção Básica", cat:"Cronicas" },
+  { n:"Sinvastatina", c:"20mg / 40mg", a:"Comprimido", u:"Dislipidemia / Risco cardiovascular", r:"Portaria 223/2015 – SMS/Maceió", cat:"Cronicas" },
+
+  // TABAGISMO
+  { n:"Nicotina", c:"2mg", a:"Goma de mascar", u:"Terapia de reposição de nicotina – tabagismo", r:"Caderno AB nº 40 – Controle do Tabagismo (Cuidado da pessoa tabagista na APS)", cat:"Tabagismo" },
+  { n:"Nicotina", c:"7mg", a:"Adesivo transdérmico", u:"Terapia de reposição de nicotina – tabagismo", r:"Caderno AB nº 40 – Controle do Tabagismo", cat:"Tabagismo" },
+  { n:"Nicotina", c:"14mg", a:"Adesivo transdérmico", u:"Terapia de reposição de nicotina – tabagismo", r:"Caderno AB nº 40 – Controle do Tabagismo", cat:"Tabagismo" },
+  { n:"Nicotina", c:"21mg", a:"Adesivo transdérmico", u:"Terapia de reposição de nicotina – tabagismo", r:"Caderno AB nº 40 – Controle do Tabagismo", cat:"Tabagismo" },
+
+  // DENGUE
+  { n:"Dipirona Sódica", c:"50mg/ml / 500mg/ml / 500mg (comp.)", a:"Solução oral / Comprimido", u:"Analgésico / Antipirético na dengue", r:"Dengue: Manual de Enfermagem – Ministério da Saúde", cat:"Dengue" },
+  { n:"Paracetamol", c:"200mg/ml / 500mg", a:"Solução oral / Comprimido", u:"Analgésico / Antipirético na dengue", r:"Dengue: Manual de Enfermagem – Ministério da Saúde", cat:"Dengue" },
+  { n:"Sais de Reidratação Oral (SRO)", c:"Na 45 / K 20 / Glicose 75 mmol/L", a:"Pó para solução oral", u:"Hidratação oral na dengue", r:"Dengue: Manual de Enfermagem – Ministério da Saúde", cat:"Dengue" },
+  { n:"Soro Fisiológico 0,9%", c:"500mL", a:"Solução endovenosa", u:"Hidratação venosa na dengue", r:"Nota Técnica nº 001/2024 – COE/COFEN – dengue em emergência em saúde pública", cat:"Dengue" },
+
+  // OUTROS
+  { n:"Salbutamol Sulfato", c:"6mg/mL (= 5mg salbutamol)", a:"Solução inalante – frasco 10mL", u:"Broncoespasmo / Crise asmática", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Espiramicina", c:"500mg", a:"Comprimido", u:"Toxoplasmose na gestação (alternativa)", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Folinato de Cálcio", c:"15mg", a:"Comprimido", u:"Associado ao tratamento de toxoplasmose", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Sulfadiazina", c:"500mg", a:"Comprimido", u:"Toxoplasmose", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Pirimetamina", c:"25mg", a:"Comprimido", u:"Toxoplasmose", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Permanganato de Potássio", c:"100mg", a:"Comprimido", u:"Antisséptico para banhos / lesões de pele", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Sulfadiazina de Prata", c:"1%", a:"Creme – bisnaga 50g", u:"Queimaduras e lesões de pele", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Papaína", c:"4% / 6% / 8%", a:"Gel – bisnaga 50g", u:"Desbridamento enzimático de feridas", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Alginato de Cálcio + Prata", c:"Placa 10×10cm", a:"Cobertura especial", u:"Feridas com exsudato e/ou infecção", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Hidrogel com Alginato", c:"Bisnaga 25g", a:"Gel para feridas", u:"Feridas com necrose / ressecamento", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Ácidos Graxos Essenciais (AGE)", c:"Loção oleosa – frasco 100mL", a:"Produto para saúde classe III", u:"Hidratação de pele / prevenção de lesões por pressão", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Glicose 50% (hipertônica)", c:"500mg/mL", a:"Ampola 10mL", u:"Hipoglicemia grave / correção", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Glicose 5% (isotônica)", c:"50mg/mL", a:"Frasco 500mL (sistema fechado)", u:"Hidratação / veículo EV", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" },
+  { n:"Ringer com Lactato", c:"Na 130 / K 4 / Ca 2,7 / Lactato 27,7 mEq/L", a:"Frasco 500mL (sistema fechado)", u:"Reposição volêmica / reequilíbrio eletrolítico", r:"Portaria 223/2015 – SMS/Maceió", cat:"Outros" }
+];
+
+// ==========================================
+// DADOS DO CALENDÁRIO VACINAL (PNI)
+// ==========================================
+const GRUPOS_VACINA = ["Crianças", "Adolescentes", "Adultos", "Gestantes", "Idosos"];
+
+const VACINAS = {
+  "Crianças": [
+    {
+      mes: "Ao nascer",
+      vacinas: [
+        { n: "BCG", dose: "Dose Única", via: "Intradérmica (ID)", d: "Previne as formas graves de tuberculose (miliar e meníngea). Deve ser aplicada o mais precocemente possível." },
+        { n: "Hepatite B", dose: "Dose ao nascer", via: "Intramuscular (IM)", d: "Idealmente nas primeiras 12 horas de vida. Previne a transmissão vertical." }
+      ]
+    },
+    {
+      mes: "2 meses",
+      vacinas: [
+        { n: "Pentavalente (DTP/HB/Hib)", dose: "1ª Dose", via: "Intramuscular (IM)", d: "Protege contra Difteria, Tétano, Coqueluche, Hepatite B e infecções por Haemophilus influenzae b." },
+        { n: "VIP (Poliomielite Inativada)", dose: "1ª Dose", via: "Intramuscular (IM)", d: "Previne a Poliomielite (paralisia infantil)." },
+        { n: "Pneumocócica 10V", dose: "1ª Dose", via: "Intramuscular (IM)", d: "Previne pneumonias, meningites e otites causadas pelo pneumococo." },
+        { n: "Rotavírus humano", dose: "1ª Dose", via: "Oral (VO)", d: "Previne diarreia grave. Limite de aprazamento: até 3 meses e 15 dias." }
+      ]
+    },
+    {
+      mes: "3 meses",
+      vacinas: [
+        { n: "Meningocócica C", dose: "1ª Dose", via: "Intramuscular (IM)", d: "Previne doença meningocócica do sorogrupo C." }
+      ]
+    },
+    {
+      mes: "4 meses",
+      vacinas: [
+        { n: "Pentavalente", dose: "2ª Dose", via: "Intramuscular (IM)", d: "Intervalo mínimo de 30 dias da 1ª dose." },
+        { n: "VIP", dose: "2ª Dose", via: "Intramuscular (IM)", d: "Segunda dose inativada." },
+        { n: "Pneumocócica 10V", dose: "2ª Dose", via: "Intramuscular (IM)", d: "Segunda dose do esquema básico." },
+        { n: "Rotavírus humano", dose: "2ª Dose", via: "Oral (VO)", d: "Limite de aprazamento: até 7 meses e 29 dias." }
+      ]
+    },
+    {
+      mes: "5 meses",
+      vacinas: [
+        { n: "Meningocócica C", dose: "2ª Dose", via: "Intramuscular (IM)", d: "Completando o esquema básico." }
+      ]
+    },
+    {
+      mes: "6 meses",
+      vacinas: [
+        { n: "Pentavalente", dose: "3ª Dose", via: "Intramuscular (IM)", d: "Última dose do esquema básico." },
+        { n: "VIP", dose: "3ª Dose", via: "Intramuscular (IM)", d: "Última dose do esquema básico." }
+      ]
+    },
+    {
+      mes: "9 meses",
+      vacinas: [
+        { n: "Febre Amarela", dose: "Dose inicial", via: "Subcutânea (SC)", d: "Indicada para áreas com recomendação de vacinação (todo o território nacional)." }
+      ]
+    },
+    {
+      mes: "12 meses",
+      vacinas: [
+        { n: "Tríplice Viral", dose: "1ª Dose", via: "Subcutânea (SC)", d: "Protege contra Sarampo, Caxumba e Rubéola." },
+        { n: "Pneumocócica 10V", dose: "Reforço", via: "Intramuscular (IM)", d: "Dose de reforço." },
+        { n: "Meningocócica C", dose: "Reforço", via: "Intramuscular (IM)", d: "Dose de reforço." }
+      ]
+    },
+    {
+      mes: "15 meses",
+      vacinas: [
+        { n: "DTP", dose: "1º Reforço", via: "Intramuscular (IM)", d: "Tríplice bacteriana infantil (Difteria, Tétano, Coqueluche)." },
+        { n: "VOP (Poliomielite Atenuada)", dose: "1º Reforço", via: "Oral (VO)", d: "A famosa 'gotinha'." },
+        { n: "Tetraviral (ou Tríplice + Varicela)", dose: "Dose Única", via: "Subcutânea (SC)", d: "Protege contra Sarampo, Caxumba, Rubéola e Varicela." },
+        { n: "Hepatite A", dose: "Dose Única", via: "Intramuscular (IM)", d: "Previne infecção hepática pelo vírus A." }
+      ]
+    },
+    {
+      mes: "4 anos",
+      vacinas: [
+        { n: "DTP", dose: "2º Reforço", via: "Intramuscular (IM)", d: "Último reforço da DTP infantil." },
+        { n: "VOP", dose: "2º Reforço", via: "Oral (VO)", d: "Último reforço da poliomielite." },
+        { n: "Varicela", dose: "Reforço", via: "Subcutânea (SC)", d: "Segunda dose para varicela." },
+        { n: "Febre Amarela", dose: "Reforço", via: "Subcutânea (SC)", d: "Aos 4 anos de idade." }
+      ]
+    }
+  ],
+  "Adolescentes": [
+    {
+      mes: "9 a 14 anos",
+      vacinas: [
+        { n: "HPV Quadrivalente", dose: "Dose Única", via: "Intramuscular (IM)", d: "Esquema atualizado PNI. Protege contra câncer de colo de útero, vulva, vagina, pênis, ânus e orofaringe." },
+        { n: "Meningocócica ACWY", dose: "Dose única / Reforço", via: "Intramuscular (IM)", d: "Recomendada para faixa etária de 11 e 12 anos. Protege contra 4 sorogrupos da meningite." }
+      ]
+    },
+    {
+      mes: "Avaliação do Cartão",
+      vacinas: [
+        { n: "Hepatite B", dose: "3 doses", via: "Intramuscular (IM)", d: "Avaliar situação vacinal. Esquema 0, 1 e 6 meses se não vacinado." },
+        { n: "Dupla Adulto (dT)", dose: "Reforço a cada 10 anos", via: "Intramuscular (IM)", d: "Difteria e Tétano. Se esquema básico incompleto, completar." },
+        { n: "Febre Amarela", dose: "Avaliar", via: "Subcutânea (SC)", d: "Se nunca recebeu ou sem comprovante: 1 dose." },
+        { n: "Tríplice Viral", dose: "2 doses", via: "Subcutânea (SC)", d: "Até os 29 anos, são recomendadas 2 doses documentadas na vida." }
+      ]
+    }
+  ],
+  "Adultos": [
+    {
+      mes: "Rotina (20 a 59 anos)",
+      vacinas: [
+        { n: "Hepatite B", dose: "3 doses", via: "Intramuscular (IM)", d: "Se não vacinado ou esquema incompleto (0, 1 e 6 meses)." },
+        { n: "Dupla Adulto (dT)", dose: "Reforço a cada 10 anos", via: "Intramuscular (IM)", d: "Em caso de ferimento grave, antecipar reforço se última dose foi há mais de 5 anos." },
+        { n: "Tríplice Viral", dose: "Até 29 anos: 2 doses | 30 a 59 anos: 1 dose", via: "Subcutânea (SC)", d: "Sarampo, Caxumba, Rubéola. Não vacinar se gestante." },
+        { n: "Febre Amarela", dose: "Dose Única na vida", via: "Subcutânea (SC)", d: "Para quem não possui registro de vacinação anterior." }
+      ]
+    }
+  ],
+  "Gestantes": [
+    {
+      mes: "Durante o Pré-Natal",
+      vacinas: [
+        { n: "dTpa (Tríplice Acelular)", dose: "1 dose por gestação", via: "Intramuscular (IM)", d: "Administrar a partir da 20ª semana de gestação. Garante transferência de anticorpos contra Coqueluche ao feto." },
+        { n: "Hepatite B", dose: "3 doses", via: "Intramuscular (IM)", d: "Se esquema incompleto ou não vacinada. Iniciar o mais cedo possível." },
+        { n: "Dupla Adulto (dT)", dose: "Completar esquema", via: "Intramuscular (IM)", d: "O esquema completo prevê 3 doses (ex: 2 de dT + 1 de dTpa)." },
+        { n: "Influenza", dose: "1 dose", via: "Intramuscular (IM)", d: "Recomendada em qualquer idade gestacional durante as campanhas anuais." },
+        { n: "COVID-19", dose: "Conforme rotina", via: "Intramuscular (IM)", d: "Incluída no calendário de rotina para gestantes (grupo prioritário)." }
+      ]
+    }
+  ],
+  "Idosos": [
+    {
+      mes: "Rotina (60 anos ou mais)",
+      vacinas: [
+        { n: "Hepatite B", dose: "3 doses", via: "Intramuscular (IM)", d: "Verificar situação vacinal anterior." },
+        { n: "Dupla Adulto (dT)", dose: "Reforço a cada 10 anos", via: "Intramuscular (IM)", d: "Difteria e Tétano." },
+        { n: "Febre Amarela", dose: "Avaliar risco/benefício", via: "Subcutânea (SC)", d: "A primo-vacinação em > 60 anos deve ser avaliada pelo médico/enfermeiro." },
+        { n: "Influenza", dose: "Dose anual", via: "Intramuscular (IM)", d: "Durante a campanha nacional de imunização." },
+        { n: "Pneumocócica 23V", dose: "1 dose", via: "Intramuscular (IM)", d: "Durante campanhas para idosos institucionalizados (asilos, casas de repouso) ou condições clínicas especiais." },
+        { n: "COVID-19", dose: "Reforço periódico", via: "Intramuscular (IM)", d: "Conforme diretrizes vigentes do MS para grupos prioritários." }
+      ]
+    }
+  ]
+};
+
+// ==========================================
+// DADOS SOAP (MELHORADOS)
+// ==========================================
+const GRUPOS_EVOLUCAO = [
+  "Hiperdia",
+  "Puericultura",
+  "Urgência",
+  "Pré-natal",
+  "CCO",
+  "Teste rápido"
+];
+
+const EVOLUCOES = {
+  "Hiperdia": [
+    {
+      titulo: "HIPERDIA / RENOVAÇÃO DE RECEITA 📝",
+      s: `PACIENTE VEM À UNIDADE PARA RENOVAÇÃO DE RECEITA. ACOMPANHADO(A) POR _____.\n\nQP: ____\n\nHMP: HAS, DM NÃO INSULINO-DEPENDENTE.\n\nHF: CA NA FAMÍLIA (____).\n\nCIRURGIAS E INTERNAMENTOS PRÉVIOS: ____\n\nNEGA: QUEDAS RECENTES, DIFICULDADE DE VISÃO E DORES NO PEITO.\n\nMUC: ____\n\nSONO E VIGÍLIA: 08h/DIA\n\nALIMENTAÇÃO: ____\n\nELIMINAÇÕES: VESICOINTESTINAIS PRESENTES EM CONDIÇÕES NORMAIS.`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSO(A), EUPNEICO(A), NORMOCÁRDICO(A), AFEBRIL.\n\n• PELE: HIDRATADO(A), NORMOCORADO(A), ANICTÉRICO(A), ACIANÓTICO(A).\n• CABEÇA E PESCOÇO: SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ACV: BCR, BNF, S/ SOPROS.\n• AR: MV+ EM AHT, SEM RA.\n• ABD: SEMIGLOBOSO, FLÁCIDO, RHA+, INDOLOR À PALPAÇÃO SUPERFICIAL OU PROFUNDA.\n• NEU: GLASGOW 15, LÚCIDO(A), ORIENTADO(A), RESPONSIVO(A).\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.\n\nEXAME DOS PÉS (DIABÉTICO):\n• PELE: ÍNTEGRA, HIDRATADA, APARELHO UNGUEAL ÍNTEGRO E REGIÃO PLANTAR SEM CALOSIDADES.\n• PULSOS: PALPÁVEIS.\n• MOTILIDADE: PRESERVADA.\n• SENSIBILIDADE: PRESERVADA.`,
+      a: `HAS / DM EM ACOMPANHAMENTO. / ____`,
+      p: `• ORIENTAÇÕES GERAIS;\n• REALIZO RENOVAÇÃO DE RECEITA;\n• ORIENTO RETORNO EM MENOS DE 30 DIAS PARA RENOVAÇÃO DE RECEITAS.`
+    }
+  ],
+  "Puericultura": [
+    {
+      titulo: "PUERICULTURA - MASCULINO 🧒🏽",
+      s: `PACIENTE VEM À UNIDADE PARA CONSULTA DE PUERICULTURA. ACOMPANHADO POR _____.\n\nQP: ____\n\nHMP: ____\n\nPRÉ-NATAL: COMPLETO, SEM INTERCORRÊNCIAS.\n\nCIRURGIAS E INTERNAMENTOS PRÉVIOS: ____\n\nNEGA: HAS, DM, ALERGIAS E ASMA.\n\nAFIRMA: ____\n\nMUC: ____\n\nSONO E VIGÍLIA: 08h/DIA\n\nALIMENTAÇÃO: ____\n\nELIMINAÇÕES: VESICOINTESTINAIS PRESENTES EM CONDIÇÕES NORMAIS.`,
+      o: `AO EXAME FÍSICO: BEG, EUPNEICO, NORMOCÁRDICO, AFEBRIL.\n\n• PELE: HIDRATADO, NORMOCORADO, ANICTÉRICO, ACIANÓTICO.\n• NEU: GLASGOW 15, LÚCIDO, ORIENTADO, RESPONSIVO.\n• CABEÇA: FONTANELAS BREGMÁTICA E LAMBDOÍDEA NORMOTENSAS, NORMOCEFÁLICO, ACUIDADE VISUAL E AUDITIVA PRESERVADAS, NARINAS SEM ALTERAÇÕES, BOCA COM DENTIÇÃO INCOMPLETA SEM CÁRIES VISÍVEIS, LÍNGUA SEM ALTERAÇÕES E TONSILAS PALATINAS SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ACV: BCR, BNF, S/ SOPROS.\n• AR: MV+ EM AHT, SEM RA.\n• ABD: PLANO, FLÁCIDO, RHA+, INDOLOR À PALPAÇÃO SUPERFICIAL OU PROFUNDA, SEM MASSAS PALPÁVEIS.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.\n• GENITÁLIA: SEM ASSADURAS EM REGIÃO INGUINAL, TESTÍCULOS PALPÁVEIS, PÊNIS COM EXPOSIÇÃO TOTAL DA GLANDE E ÂNUS SEM ALTERAÇÕES.`,
+      a: `CRESCIMENTO E DESENVOLVIMENTO ADEQUADOS PARA A IDADE.`,
+      p: `• ORIENTAÇÕES GERAIS: ALIMENTAÇÃO, VACINA, CRESCIMENTO E DESENVOLVIMENTO;\n• REALIZO REGISTRO EM CADERNETA DA CRIANÇA;\n• ORIENTO RETORNO.`
+    },
+    {
+      titulo: "PUERICULTURA - FEMININO 👧🏽",
+      s: `PACIENTE VEM À UNIDADE PARA CONSULTA DE PUERICULTURA. ACOMPANHADA POR _____.\n\nQP: ____\n\nHMP: ____\n\nPRÉ-NATAL: COMPLETO, SEM INTERCORRÊNCIAS.\n\nCIRURGIAS E INTERNAMENTOS PRÉVIOS: ____\n\nNEGA: HAS, DM, ALERGIAS E ASMA.\n\nAFIRMA: ____\n\nMUC: ____\n\nSONO E VIGÍLIA: 08h/DIA\n\nALIMENTAÇÃO: ____\n\nELIMINAÇÕES: VESICOINTESTINAIS PRESENTES EM CONDIÇÕES NORMAIS.`,
+      o: `AO EXAME FÍSICO: BEG, EUPNEICA, NORMOCÁRDICA, AFEBRIL.\n\n• PELE: HIDRATADA, NORMOCORADA, ANICTÉRICA, ACIANÓTICA.\n• NEU: GLASGOW 15, LÚCIDA, ORIENTADA, RESPONSIVA.\n• CABEÇA: FONTANELAS BREGMÁTICA E LAMBDOÍDEA NORMOTENSAS, NORMOCEFÁLICA, ACUIDADE VISUAL E AUDITIVA PRESERVADAS, NARINAS SEM ALTERAÇÕES, BOCA COM DENTIÇÃO INCOMPLETA SEM CÁRIES VISÍVEIS, LÍNGUA SEM ALTERAÇÕES E TONSILAS PALATINAS SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ACV: BCR, BNF, S/ SOPROS.\n• AR: MV+ EM AHT, SEM RA.\n• ABD: PLANO, FLÁCIDO, RHA+, INDOLOR À PALPAÇÃO SUPERFICIAL OU PROFUNDA, SEM MASSAS PALPÁVEIS.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.\n• GENITÁLIA: SEM ASSADURAS EM REGIÃO INGUINAL, GRANDES E PEQUENOS LÁBIOS SEM ALTERAÇÕES, SEM SECREÇÕES, ÂNUS SEM ALTERAÇÕES.`,
+      a: `CRESCIMENTO E DESENVOLVIMENTO ADEQUADOS PARA A IDADE.`,
+      p: `• ORIENTAÇÕES GERAIS: ALIMENTAÇÃO, VACINA, CRESCIMENTO E DESENVOLVIMENTO;\n• REALIZO REGISTRO EM CADERNETA DA CRIANÇA;\n• ORIENTO RETORNO.`
+    }
+  ],
+  "Urgência": [
+    {
+      titulo: "URGÊNCIA - MASCULINO 🚨",
+      s: `PACIENTE VEM À UNIDADE PARA CONSULTA DE URGÊNCIA. ACOMPANHADO POR GENITORA / _____.\n\nQP: CEFALEIA, MIALGIA, ASTENIA, INAPETÊNCIA, VERTIGEM, NÁUSEA E FEBRE NÃO AFERIDA.\n\nHDA: INÍCIO HÁ __ DIAS.\n\nNEGA: ALERGIAS, ASMA, ÊMESE E DIARREIA.\n\nMUC: NEGA USO.\n\nSONO E VIGÍLIA: 08h/DIA\n\nALIMENTAÇÃO: INAPETÊNCIA.\n\nELIMINAÇÕES: VESICOINTESTINAIS PRESENTES EM CONDIÇÕES NORMAIS.\n\nNO MOMENTO, APRESENTANDO FEBRÍCULA (37,1ºC).`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSO, EUPNEICO, NORMOCÁRDICO, AFEBRIL.\n\n• PELE: HIDRATADO, NORMOCORADO, ANICTÉRICO, ACIANÓTICO.\n• CABEÇA E PESCOÇO: SEM ALTERAÇÕES, LINFONODOS DA CADEIA CERVICAL PALPÁVEIS, TONSILAS PALATINAS VISÍVEIS COM PRESENÇA DE CÁSEOS.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ACV: BCR, BNF, S/ SOPROS.\n• AR: MV+ EM AHT, SEM RA.\n• ABD: SEMIGLOBOSO, FLÁCIDO, RHA+, INDOLOR À PALPAÇÃO SUPERFICIAL OU PROFUNDA.\n• NEU: GLASGOW 15, LÚCIDO, ORIENTADO, RESPONSIVO.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.`,
+      a: `SÍNDROME VIRAL / A ESCLARECER. / ____`,
+      p: `• ORIENTAÇÕES GERAIS;\n• ALIMENTAÇÃO ADEQUADA;\n• AUMENTO DA HIDRATAÇÃO;\n• LAVAGEM NASAL;\n• PRESCREVO: ____;\n• ORIENTO RETORNO EM CASO DE PIORA.`
+    },
+    {
+      titulo: "URGÊNCIA - FEMININO 🚨",
+      s: `PACIENTE VEM À UNIDADE PARA CONSULTA DE URGÊNCIA. ACOMPANHADA POR GENITORA / _____.\n\nQP: CEFALEIA, MIALGIA, ASTENIA, INAPETÊNCIA, VERTIGEM, NÁUSEA E FEBRE NÃO AFERIDA.\n\nHDA: INÍCIO HÁ __ DIAS.\n\nNEGA: ALERGIAS, ASMA, ÊMESE E DIARREIA.\n\nMUC: NEGA USO.\n\nSONO E VIGÍLIA: 08h/DIA\n\nALIMENTAÇÃO: INAPETÊNCIA.\n\nELIMINAÇÕES: VESICOINTESTINAIS PRESENTES EM CONDIÇÕES NORMAIS.\n\nNO MOMENTO, APRESENTANDO FEBRÍCULA (37,1ºC).`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSA, EUPNEICA, NORMOCÁRDICA, AFEBRIL.\n\n• PELE: HIDRATADA, NORMOCORADA, ANICTÉRICA, ACIANÓTICA.\n• CABEÇA E PESCOÇO: SEM DEFORMIDADES, LINFONODOS DA CADEIA CERVICAL PALPÁVEIS, TONSILAS PALATINAS VISÍVEIS COM PRESENÇA DE CÁSEOS.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ACV: BCR, BNF, S/ SOPROS.\n• AR: MV+ EM AHT, SEM RA.\n• ABD: SEMIGLOBOSO, FLÁCIDO, RHA+, INDOLOR À PALPAÇÃO SUPERFICIAL OU PROFUNDA.\n• NEU: GLASGOW 15, LÚCIDA, ORIENTADA, RESPONSIVA.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.`,
+      a: `SÍNDROME VIRAL / A ESCLARECER. / ____`,
+      p: `• ORIENTAÇÕES GERAIS;\n• ALIMENTAÇÃO ADEQUADA;\n• AUMENTO DA HIDRATAÇÃO;\n• LAVAGEM NASAL;\n• PRESCREVO: ____;\n• ORIENTO RETORNO EM CASO DE PIORA.`
+    }
+  ],
+  "Pré-natal": [
+    {
+      titulo: "PRÉ-NATAL 🤰🏼",
+      s: `PRÉ-NATAL - ___ª CONSULTA\n\nPACIENTE VEM À UNIDADE RELATANDO ESTAR GRÁVIDA, PORTANDO EXAME DE β-hCG REAGENTE.\n\nG: __ P: __ A: __\n\nANTECEDENTES GESTACIONAIS: ____\n\nHISTÓRIA MÉDICA PREGRESSA: ____\n\nNEGA: HAS, DM E ALERGIAS. NEGA TABAGISMO E ETILISMO.\n\nAFIRMA: ____\n\nGESTAÇÃO ATUAL: __ S __ D\n\nDUM: ____\n\nIG: ____\n\nDPP: ____\n\nREFERE: ____\n\nEM USO DE: ULTRAGESTAN VIA VAGINAL, MATERNA E ÔMEGA 3.\n\nNO MOMENTO:\nSONO E VIGÍLIA: 08h/DIA\nALIMENTAÇÃO: ____\nELIMINAÇÕES: VESICOINTESTINAIS PRESENTES EM CONDIÇÕES NORMAIS.`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSA, EUPNEICA, NORMOCÁRDICA, AFEBRIL.\n\n• PELE: HIDRATADA, NORMOCORADA, ANICTÉRICA, ACIANÓTICA.\n• CABEÇA E PESCOÇO: SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ACV: BCR, BNF, S/ SOPROS.\n• AR: MV+ EM AHT, SEM RA.\n• ABD: GRAVÍDICO.\n• NEU: GLASGOW 15, LÚCIDA, ORIENTADA, RESPONSIVA.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.`,
+      a: `GESTAÇÃO DE __ SEMANAS E __ DIAS. / ____`,
+      p: `• ORIENTAÇÕES GERAIS;\n• PRESCREVO SULFATO FERROSO ATÉ 06 SEMANAS APÓS O PARTO;\n• PRESCREVO ÁCIDO FÓLICO ATÉ O FIM DA GESTAÇÃO;\n• PRESCREVO CARBONATO DE CÁLCIO ATÉ O FIM DA GESTAÇÃO;\n• AGUARDO EXAMES;\n• PRESCREVO EXAMES DO ___º TRIMESTRE;\n• ENCAMINHO À SALA DE VACINAS E AO TESTE RÁPIDO.`
+    }
+  ],
+  "CCO": [
+    {
+      titulo: "COLETA DE CCO 🪷",
+      s: `CIDADÃ COMPARECE PARA CONSULTA DE ROTINA GINECOLÓGICA E COLETA DE CITOPATOLÓGICO.\n\nQP: ____\n\nCICLOS MENSTRUAIS: REGULARES / IRREGULARES.\n\nDUM: ____\n\nVIDA SEXUAL: ATIVA / INATIVA.\n\nMÉTODO CONTRACEPTIVO ATUAL: ____\n\nNEGA: SANGRAMENTO PÓS-COITO, DOR PÉLVICA PERSISTENTE OU CORRIMENTOS ANORMAIS.\n\nANTECEDENTES PESSOAIS: HAS / DM / DISLIPIDEMIA / TABAGISMO.\n\nHISTÓRIA FAMILIAR: CÂNCER DE MAMA / COLO DE ÚTERO / OVÁRIO.`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSA, EUPNEICA, NORMOCÁRDICA, AFEBRIL.\n\n• PELE: HIDRATADA, NORMOCORADA, ANICTÉRICA, ACIANÓTICA.\n• CABEÇA E PESCOÇO: SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ABD: SEMIGLOBOSO, INDOLOR À PALPAÇÃO.\n• NEU: GLASGOW 15, LÚCIDA, ORIENTADA, RESPONSIVA.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.\n\nEXAME GINECOLÓGICO:\n• VULVA E VAGINA SEM LESÕES.\n• COLO UTERINO VISUALIZADO EM FENDA, SEM ALTERAÇÕES.\n• SECREÇÃO FISIOLÓGICA.`,
+      a: `RASTREAMENTO DE CA DE COLO UTERINO. / ____`,
+      p: `• ORIENTAÇÕES GERAIS;\n• REALIZO COLETA DE CCO;\n• PRESCREVO: ____`
+    }
+  ],
+  "Teste rápido": [
+    {
+      titulo: "TESTE RÁPIDO - MASCULINO 🩸",
+      s: `PACIENTE COMPARECE PARA TESTAGEM RÁPIDA.\n\nQP: ROTINA.\n\nVIDA SEXUAL: ATIVA.\n\nUSO DE PRESERVATIVO: NÃO / SIM.\n\nMÉTODO CONTRACEPTIVO ATUAL: ____\n\nANTECEDENTES PESSOAIS: ____\n\nNEGA: HAS / DM / TABAGISMO / ETILISMO.`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSO, EUPNEICO, NORMOCÁRDICO, AFEBRIL.\n\n• PELE: HIDRATADO, NORMOCORADO, ANICTÉRICO, ACIANÓTICO.\n• CABEÇA E PESCOÇO: SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ABD: SEMIGLOBOSO, INDOLOR À PALPAÇÃO.\n• NEU: GLASGOW 15, LÚCIDO, ORIENTADO, RESPONSIVO.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.`,
+      a: `TESTAGEM DE ROTINA. / ____`,
+      p: `• REALIZO TESTAGEM RÁPIDA;\n• ORIENTO RETORNO.`
+    },
+    {
+      titulo: "TESTE RÁPIDO - FEMININO 🩸",
+      s: `PACIENTE COMPARECE PARA TESTAGEM RÁPIDA.\n\nQP: ROTINA.\n\nVIDA SEXUAL: ATIVA.\n\nUSO DE PRESERVATIVO: NÃO / SIM.\n\nMÉTODO CONTRACEPTIVO ATUAL: ____\n\nANTECEDENTES PESSOAIS: ____\n\nNEGA: HAS / DM / TABAGISMO / ETILISMO / GESTAÇÃO.`,
+      o: `AO EXAME FÍSICO: BEG, NORMOTENSA, EUPNEICA, NORMOCÁRDICA, AFEBRIL.\n\n• PELE: HIDRATADA, NORMOCORADA, ANICTÉRICA, ACIANÓTICA.\n• CABEÇA E PESCOÇO: SEM ALTERAÇÕES.\n• TÓRAX: SIMÉTRICO COM EXPANSIBILIDADE BILATERAL.\n• ABD: SEMIGLOBOSO, INDOLOR À PALPAÇÃO.\n• NEU: GLASGOW 15, LÚCIDA, ORIENTADA, RESPONSIVA.\n• EXT: AQUECIDAS, COM PULSOS PERIFÉRICOS CHEIOS E SIMÉTRICOS, TEC < 3 SEG.`,
+      a: `TESTAGEM DE ROTINA. / ____`,
+      p: `• REALIZO TESTAGEM RÁPIDA;\n• ORIENTO RETORNO.`
+    }
+  ]
+};
+
+// ==========================================
+// LÓGICA DE ABAS (VIEWS)
+// ==========================================
+function switchView(viewName) {
+  // Botões
+  document.getElementById("tab-meds").classList.toggle("active", viewName === "meds");
+  document.getElementById("tab-vacinas").classList.toggle("active", viewName === "vacinas");
+  document.getElementById("tab-evolucoes").classList.toggle("active", viewName === "evolucoes");
+  
+  // Containers
+  document.getElementById("view-meds").style.display = viewName === "meds" ? "block" : "none";
+  document.getElementById("view-vacinas").style.display = viewName === "vacinas" ? "block" : "none";
+  document.getElementById("view-evolucoes").style.display = viewName === "evolucoes" ? "block" : "none";
+
+  if (viewName === "vacinas" && !document.querySelector(".v-btn.active")) {
+    setVacinaFilter("Crianças");
+  }
+
+  if (viewName === "evolucoes" && !document.querySelector(".e-btn.active")) {
+    setEvolucaoFilter("Hiperdia");
+  }
+}
+
+// ==========================================
+// LÓGICA DE MEDICAMENTOS 
+// ==========================================
+function cssClass(id) { return id === "Todos" ? "" : "c-" + id.toLowerCase(); }
+const filterBar = document.getElementById("filterBar");
+const catMap = {};
+CATS.forEach(c => { catMap[c.id] = c; });
+
+CATS.forEach(cat => {
+  const btn = document.createElement("button");
+  btn.className = "filter-btn " + cssClass(cat.id) + (cat.id === "Todos" ? " active" : "");
+  btn.style.setProperty("--cc", cat.cc);
+  btn.dataset.cat = cat.id;
+  btn.innerHTML = `<span class="dot"></span>${cat.label}`;
+  btn.addEventListener("click", () => setFilter(cat.id));
+  filterBar.appendChild(btn);
+});
+
+let filtroAtivo = "Todos";
+function setFilter(id) {
+  filtroAtivo = id;
+  document.querySelectorAll(".filter-btn").forEach(b => { b.classList.toggle("active", b.dataset.cat === id); });
+  renderizarMeds();
+}
+
+const searchInput = document.getElementById("searchInput");
+const clearBtn = document.getElementById("clearBtn");
+searchInput.addEventListener("input", () => {
+  clearBtn.style.display = searchInput.value ? "block" : "none";
+  renderizarMeds();
+});
+function limparBusca() {
+  searchInput.value = "";
+  clearBtn.style.display = "none";
+  renderizarMeds();
+}
+
+function renderizarMeds() {
+  const busca = searchInput.value.toLowerCase().trim();
+  const lista = document.getElementById("lista");
+  const counter = document.getElementById("resultsCount");
+  lista.innerHTML = "";
+
+  const filtrados = MEDS.filter(m => {
+    const matchCat = filtroAtivo === "Todos" || m.cat === filtroAtivo;
+    const matchSearch = !busca || m.n.toLowerCase().includes(busca) || m.u.toLowerCase().includes(busca);
+    return matchCat && matchSearch;
+  });
+
+  counter.innerHTML = `<span>${filtrados.length}</span> medicamento${filtrados.length !== 1 ? "s" : ""} encontrado${filtrados.length !== 1 ? "s" : ""}`;
+
+  if (filtrados.length === 0) {
+    lista.innerHTML = `<div class="empty"><div class="empty-icon">🔍</div><h3>Nenhum resultado</h3><p>Tente outros termos ou mude o filtro</p></div>`;
+    return;
+  }
+
+  filtrados.forEach((m, i) => {
+    const cat = catMap[m.cat] || { cc: "#888", label: m.cat };
+    const cssC = cssClass(m.cat);
+    const card = document.createElement("div");
+    card.className = "card " + cssC;
+    card.style.setProperty("--cc", cat.cc);
+    card.style.animationDelay = Math.min(i * 0.03, 0.3) + "s";
+
+    const nEsc = m.n.replace(/'/g, "\\'"); const cEsc = m.c.replace(/'/g, "\\'");
+    const aEsc = m.a.replace(/'/g, "\\'"); const rEsc = m.r.replace(/'/g, "\\'");
+
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="card-stripe"></div>
+        <div class="card-body">
+          <div class="card-header">
+            <div><div class="card-name">${m.n}</div><div class="card-conc">${m.c}</div></div>
+            <span class="cat-tag">${cat.label}</span>
+          </div>
+          <div class="info-row"><span class="info-label">Apresentação</span><span class="info-val">${m.a}</span></div>
+          <div class="info-row"><span class="info-label">Indicação</span><span class="info-val">${m.u}</span></div>
+          <div class="respaldo"><strong>📋 Respaldo Legal</strong>${m.r}</div>
+        </div>
+      </div>
+      <button class="copy-btn" onclick="copiar('${nEsc}','${cEsc}','${aEsc}','${rEsc}')">📋 &nbsp;COPIAR PARA O PEC</button>`;
+    lista.appendChild(card);
+  });
+}
+
+function copiar(n, c, a, r) {
+  const texto = `${n} ${c}, ${a}.\nIndicação: —\nProtocolo: ${r}.`;
+  navigator.clipboard.writeText(texto).catch(() => {
+    const t = document.createElement("textarea"); t.value = texto; document.body.appendChild(t); t.select(); document.execCommand("copy"); document.body.removeChild(t);
+  });
+  const toast = document.getElementById("toast"); toast.classList.add("show"); setTimeout(() => toast.classList.remove("show"), 2000);
+}
+
+// ==========================================
+// LÓGICA DE VACINAS
+// ==========================================
+const vacinaFilters = document.getElementById("vacinaFilters");
+GRUPOS_VACINA.forEach(grupo => {
+  const btn = document.createElement("button");
+  btn.className = "v-btn";
+  btn.dataset.grupo = grupo;
+  btn.innerText = grupo;
+  btn.addEventListener("click", () => setVacinaFilter(grupo));
+  vacinaFilters.appendChild(btn);
+});
+
+let grupoVacinaAtivo = "";
+function setVacinaFilter(grupo) {
+  grupoVacinaAtivo = grupo;
+  document.querySelectorAll(".v-btn").forEach(b => {
+    b.classList.toggle("active", b.dataset.grupo === grupo);
+  });
+  renderizarVacinas();
+}
+
+function renderizarVacinas() {
+  const lista = document.getElementById("lista-vacinas");
+  lista.innerHTML = "";
+  
+  const cronograma = VACINAS[grupoVacinaAtivo] || [];
+  
+  cronograma.forEach((periodo, i) => {
+    const divGroup = document.createElement("div");
+    divGroup.className = "timeline-group";
+    divGroup.style.animation = `fadeUp 0.3s ease ${i * 0.05}s both`;
+    
+    let html = `<div class="timeline-age">${periodo.mes}</div>`;
+    
+    periodo.vacinas.forEach(vac => {
+      html += `
+        <div class="vac-item">
+          <div class="vac-header">
+            <span class="vac-name">${vac.n}</span>
+            <span class="vac-via">${vac.via}</span>
+          </div>
+          <div class="vac-dose">${vac.dose}</div>
+          <div class="vac-desc">${vac.d}</div>
+        </div>
+      `;
+    });
+    
+    divGroup.innerHTML = html;
+    lista.appendChild(divGroup);
+  });
+}
+
+// ==========================================
+// LÓGICA DE EVOLUÇÕES / SOAP
+// ==========================================
+const evolucaoFilters = document.getElementById("evolucaoFilters");
+
+GRUPOS_EVOLUCAO.forEach(grupo => {
+  const btn = document.createElement("button");
+  btn.className = "e-btn";
+  btn.dataset.grupo = grupo;
+  btn.innerText = grupo;
+  btn.onclick = () => setEvolucaoFilter(grupo);
+  evolucaoFilters.appendChild(btn);
+});
+
+let grupoEvolucaoAtivo = "";
+
+function setEvolucaoFilter(grupo) {
+  grupoEvolucaoAtivo = grupo;
+  document.querySelectorAll(".e-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.grupo === grupo);
+  });
+  renderizarEvolucoes();
+}
+
+function renderizarEvolucoes() {
+  const lista = document.getElementById("lista-evolucoes");
+  lista.innerHTML = "";
+
+  const modelos = EVOLUCOES[grupoEvolucaoAtivo] || [];
+
+  modelos.forEach((modelo, index) => {
+    const soapCompleto = `SUBJETIVO\n${modelo.s}\n\nOBJETIVO\n${modelo.o}\n\nAVALIAÇÃO\n${modelo.a}\n\nPLANO\n${modelo.p}`;
+    const card = document.createElement("div");
+    card.className = "soap-card";
+    card.style.animationDelay = (index * 0.05) + "s";
+
+    card.innerHTML = `
+      <div class="soap-header">
+        ${modelo.titulo}
+      </div>
+      <div class="soap-section">
+        <h3>S — SUBJETIVO</h3>
+        <pre>${modelo.s}</pre>
+        <button class="soap-btn" onclick="copiarTexto(\`${modelo.s.replace(/`/g, '\\`')}\`)">
+          📋 COPIAR SUBJETIVO
+        </button>
+      </div>
+      <div class="soap-section">
+        <h3>O — OBJETIVO</h3>
+        <pre>${modelo.o}</pre>
+        <button class="soap-btn" onclick="copiarTexto(\`${modelo.o.replace(/`/g, '\\`')}\`)">
+          📋 COPIAR OBJETIVO
+        </button>
+      </div>
+      <div class="soap-section">
+        <h3>A — AVALIAÇÃO</h3>
+        <pre>${modelo.a}</pre>
+        <button class="soap-btn" onclick="copiarTexto(\`${modelo.a.replace(/`/g, '\\`')}\`)">
+          📋 COPIAR AVALIAÇÃO
+        </button>
+      </div>
+      <div class="soap-section">
+        <h3>P — PLANO</h3>
+        <pre>${modelo.p}</pre>
+        <button class="soap-btn" onclick="copiarTexto(\`${modelo.p.replace(/`/g, '\\`')}\`)">
+          📋 COPIAR PLANO
+        </button>
+      </div>
+      <button class="soap-btn soap-full" onclick="copiarTexto(\`${soapCompleto.replace(/`/g, '\\`')}\`)">
+        📋 COPIAR SOAP COMPLETO
+      </button>
+    `;
+    lista.appendChild(card);
+  });
+}
+
+function copiarTexto(texto) {
+  navigator.clipboard.writeText(texto).catch(() => {
+    const textarea = document.createElement("textarea");
+    textarea.value = texto;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  });
+  const toast = document.getElementById("toast");
+  toast.classList.add("show");
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+// Inicializar primeira view
+renderizarMeds();
+</script>
+</body>
+</html>
