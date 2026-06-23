@@ -63,10 +63,15 @@ Aplicativo web estático para enfermeiros da Atenção Primária à Saúde (APS)
 
 ## 🗂 Estrutura de Arquivos
 
-```
-index.html       — Aplicativo completo (HTML + CSS + JS inline)
-favicon.svg      — Ícone SVG para aba, favoritos e tela inicial
-README.md        — Esta documentação
+```plaintext
+/
+├── css/
+│   └── style.css    # Folha de estilos principal
+├── js/
+│   └── main.js      # Lógica e interatividade do aplicativo
+├── index.html       # Estrutura principal da página (HTML)
+├── favicon.svg      # Ícone para navegador e atalhos
+└── README.md        # Esta documentação
 ```
 
 ---
@@ -94,15 +99,6 @@ README.md        — Esta documentação
 
 Para publicar, use a **aba Publish** do Genspark.
 
----
-
-## 📌 Próximos Passos Sugeridos
-
-1. Adicionar mais modelos SOAP (planejamento familiar, saúde mental, DM/HAS detalhado)
-2. Incluir calculadoras adicionais (IMC, dose pediátrica, IG pela DUM)
-3. Adicionar modo offline (PWA / Service Worker)
-4. Integração com calendário para controle de retornos
-5. Expansão da seção de curativos com guia de escolha da cobertura por tipo de ferida
 
 ---
 

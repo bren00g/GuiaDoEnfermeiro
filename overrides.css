@@ -1,0 +1,75 @@
+/* Overrides for UX, usability and basic accessibility tweaks */
+:root { --ux-logo-gap: 10px; }
+
+/* Logo: ensure predictable layout, prevent overflow and improve reading */
+.logo {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--ux-logo-gap) !important;
+  min-width: 0 !important;
+}
+.logo > div {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  min-width: 0 !important;
+  overflow: hidden;
+}
+.logo h1 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.05;
+  word-break: break-word;
+}
+.logo small {
+  font-size: 0.66rem;
+  color: rgba(255,255,255,0.75);
+  display: block;
+}
+.logo-slogan {
+  font-size: 0.58rem;
+  color: var(--orange);
+  font-weight: 600;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+}
+
+/* Smaller, consistent logo icon */
+.logo-icon { width: 28px !important; height: 28px !important; }
+.logo-icon svg { width: 20px !important; height: 20px !important; }
+
+@media (min-width: 900px) {
+  .logo { align-items: flex-start !important; }
+  .logo h1 { font-size: 0.95rem; }
+  .logo-icon { width: 26px !important; height: 26px !important; }
+  .logo-icon svg { width: 18px !important; height: 18px !important; }
+}
+
+/* Toast: constrain width, avoid strange computed heights and make it accessible */
+.toast {
+  max-width: calc(100% - 48px) !important;
+  width: auto !important;
+  white-space: nowrap !important;
+  height: auto !important;
+  line-height: 1.25 !important;
+  pointer-events: none !important; /* only active when .show */
+  overflow: hidden !important;
+}
+.toast.show { pointer-events: auto !important; }
+
+/* Keyboard focus styles for interactive controls */
+.tab-btn:focus, .sp-btn-primary:focus, .sp-btn-ghost:focus, .clear-btn:focus {
+  outline: 3px solid rgba(42,31,255,0.12);
+  outline-offset: 3px;
+}
+
+/* Ensure buttons have sufficient hit area on mobile */
+.tab-btn, .sp-btn-primary, .sp-btn-ghost { padding: 10px 12px !important; }
+
+/* Improve contrast for small text in sidebar */
+.logo small, .dev-credit { color: rgba(255,255,255,0.85) !important; }
+
+/* Minor spacing tidy */
+.header-top { padding-bottom: 10px !important; }
