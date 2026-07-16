@@ -1508,6 +1508,21 @@ const MED_CATEGORIA_ID_MAP = {
   "Outros": "Outros"
 };
 
+const MED_CATEGORIA_LABEL_MAP = {
+  IST: "IST",
+  Contra: "Contracepção",
+  PrEP_PEP: "PrEP / PEP",
+  Mulher: "Saúde da Mulher",
+  Prenatal: "Pré-natal",
+  Crianca: "Criança",
+  TB: "Tuberculose",
+  Cronicas: "Crônicas",
+  Tabagismo: "Tabagismo",
+  Dengue: "Dengue",
+  Curativo: "Curativos",
+  Outros: "Outros"
+};
+
 function loadLegacyLocalCustomMeds() {
   try {
     const raw = localStorage.getItem(LEGACY_LOCAL_CUSTOM_MEDS_KEY);
@@ -1544,6 +1559,112 @@ function saveLegacyLocalCustomMed(med) {
   }
 }
 
+function normalizeSupabaseProjectUrl(rawUrl) {
+  if (!rawUrl) {
+    return "";
+  }
+
+  const trimmed = String(rawUrl).trim();
+  if (!trimmed) {
+    return "";
+  }
+
+  let normalized = trimmed.replace(/\/+$/, "");
+  normalized = normalized.replace(/\/rest\/v1$/i, "");
+  return normalized;
+}
+
+function parseLegacyConcentration(rawConcentration) {
+  const defaultValue = { quantidade: null, unidade: "mg" };
+  if (!rawConcentration) {
+    return defaultValue;
+  }
+
+  const input = String(rawConcentration).trim();
+  if (!input) {
+    return defaultValue;
+  }
+
+  const match = input.match(/^([\d.,]+)\s*(\S+)?/);
+  if (!match) {
+    return defaultValue;
+  }
+
+  const numeric = Number(match[1].replace(",", "."));
+  const unitRaw = (match[2] || "mg").toLowerCase();
+  const allowedUnits = new Set(["mg", "ui", "g", "ml", "mcg", "meq", "outro"]);
+
+  return {
+    quantidade: Number.isFinite(numeric) ? numeric : null,
+    unidade: allowedUnits.has(unitRaw) ? unitRaw : "mg"
+  };
+}
+
+function buildSupabaseSeedFromLegacyMed(med) {
+  if (!med || !med.n || !med.a || !med.u || !med.r || !med.cat) {
+    return null;
+  }
+
+  const parsed = parseLegacyConcentration(med.c);
+  return {
+    nome: med.n,
+    categoria: MED_CATEGORIA_LABEL_MAP[med.cat] || "Outros",
+    quantidade: parsed.quantidade,
+    unidade: parsed.unidade,
+    apresentacao: med.a,
+    indicacao: med.u,
+    respaldo_legal: med.r
+  };
+}
+
+async function ensureLegacySupabaseMedsSeeded() {
+  try {
+    const supabaseClient = await getLegacySupabaseClient();
+    const {
+      data: { user },
+      error: userError
+    } = await supabaseClient.auth.getUser();
+
+    if (userError || !user) {
+      return;
+    }
+
+    const seedKey = `legacy_meds_seeded_${user.id}`;
+    if (localStorage.getItem(seedKey) === "1") {
+      return;
+    }
+
+    const { count, error: countError } = await supabaseClient
+      .from("medicamentos")
+      .select("id", { count: "exact", head: true });
+
+    if (countError) {
+      return;
+    }
+
+    if ((count || 0) > 0) {
+      localStorage.setItem(seedKey, "1");
+      return;
+    }
+
+    const seedRows = MEDS
+      .map(buildSupabaseSeedFromLegacyMed)
+      .filter((row) => !!row);
+
+    for (let i = 0; i < seedRows.length; i += 100) {
+      const chunk = seedRows.slice(i, i + 100);
+      const { error: insertError } = await supabaseClient.from("medicamentos").insert(chunk);
+      if (insertError) {
+        return;
+      }
+    }
+
+    localStorage.setItem(seedKey, "1");
+  } catch (_) {
+    // A semeadura e opcional e nao deve quebrar o uso normal da tela.
+  }
+}
+
 async function getLegacySupabaseClient() {
   if (legacySupabaseClient) {
     return legacySupabaseClient;
@@ -1560,7 +1681,7 @@ async function getLegacySupabaseClient() {
   const injectedConfig = window.__LEGACY_SUPABASE__ || {};
 
   const config = {
-    url: (window.LEGACY_SUPABASE_URL || injectedConfig.url || metaUrl || localUrl || "").trim(),
+    url: normalizeSupabaseProjectUrl(window.LEGACY_SUPABASE_URL || injectedConfig.url || metaUrl || localUrl || ""),
     anonKey: (window.LEGACY_SUPABASE_ANON_KEY || injectedConfig.anonKey || metaAnonKey || localAnonKey || "").trim()
   };
 
@@ -1947,7 +2068,9 @@ async function submitLegacyMedicamento() {
     };
 
     MEDS.unshift(medViewModel);
-
+    setFilter("Todos");
+    searchInput.value = "";
+    clearBtn.style.display = "none";
     renderizarMeds();
     clearLegacyMedForm();
     closeLegacyMedModal();
@@ -1995,3 +2118,4 @@ initLegacyAuthModal();
 initLegacyMedModal();
 loadLegacyLocalCustomMeds();
 renderizarMeds();
+ensureLegacySupabaseMedsSeeded();
