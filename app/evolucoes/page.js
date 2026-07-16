@@ -17,7 +17,7 @@ export default async function EvolucoesPage() {
   const { data: authData } = await supabase.auth.getUser();
 
   if (!authData.user) {
-    redirect("/auth/login?next=/evolucoes");
+    redirect("/legacy?auth=login&next=/evolucoes");
   }
 
   const { data, error } = await supabase

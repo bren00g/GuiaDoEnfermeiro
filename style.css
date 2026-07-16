@@ -2,8 +2,8 @@
   --navy: #002D6D;
   --navy2: #003580;
   --blue: #0077CC;
-  --atllas-blue: #2A1FFF;
-  --atllas-blue-light: rgba(42,31,255,0.08);
+  --brand-blue: #2A1FFF;
+  --brand-blue-light: rgba(42,31,255,0.08);
   --orange: #FF5C1A;
   --sky: #4DB6E8;
   --bg: #F5F6F8;
@@ -180,8 +180,8 @@ body {
   min-width: 0;
 }
 
-/* Atllas logo mark SVG inline */
-.atllas-mark {
+/* Logo mark SVG inline */
+.brand-mark {
   width: 36px;
   height: 36px;
   flex-shrink: 0;
@@ -294,7 +294,7 @@ body {
   transition: all 0.2s;
 }
 
-#searchInput:focus { border-color: var(--atllas-blue); box-shadow: 0 0 0 3px rgba(29,0,255,0.1); }
+#searchInput:focus { border-color: var(--brand-blue); box-shadow: 0 0 0 3px rgba(29,0,255,0.1); }
 
 .clear-btn {
   position: absolute;
@@ -366,7 +366,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-.sub-btn.active { background: var(--atllas-blue); color: #fff; border-color: var(--atllas-blue); }
+.sub-btn.active { background: var(--brand-blue); color: #fff; border-color: var(--brand-blue); }
 
 .results-bar { padding: 10px 16px 6px; display: flex; align-items: center; }
 .results-count { font-size: 0.8rem; color: var(--muted); font-weight: 500; }
@@ -463,7 +463,7 @@ body {
   gap: 6px;
 }
 
-.copy-btn:active, .copy-btn:hover { background: var(--atllas-blue); }
+.copy-btn:active, .copy-btn:hover { background: var(--brand-blue); }
 
 /* FILTER BUTTON STATES */
 .filter-btn.active { background: var(--cc, var(--navy)); border-color: var(--cc, var(--navy)); color: #fff; }
@@ -614,13 +614,13 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-.soap-btn:hover { background: var(--atllas-blue); }
+.soap-btn:hover { background: var(--brand-blue); }
 .soap-full { background: var(--blue); margin-top: 4px; }
 .soap-full:hover { background: var(--navy); }
 
 /* CALCULADORA */
 #view-calculadora { padding: 16px 16px 100px; }
-.calc-header-box { background: #fff; border-radius: 14px; padding: 16px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--atllas-blue); }
+.calc-header-box { background: #fff; border-radius: 14px; padding: 16px; border: 1px solid var(--border); margin-bottom: 16px; box-shadow: 0 1px 4px rgba(0,0,0,0.05); border-left: 4px solid var(--brand-blue); }
 .calc-header-box h2 { font-size: 1.05rem; color: var(--navy); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
 .calc-header-box p { font-size: 0.78rem; color: var(--muted); line-height: 1.4; }
 
@@ -741,10 +741,10 @@ body {
   background: var(--navy);
   padding: 20px;
   text-align: center;
-  border-top: 3px solid var(--atllas-blue);
+  border-top: 3px solid var(--brand-blue);
 }
 .footer-content { display: flex; flex-direction: column; gap: 4px; color: #fff; font-size: 0.82rem; }
-.footer-slogan { color: var(--atllas-blue); font-weight: 700; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
+.footer-slogan { color: var(--brand-blue); font-weight: 700; font-size: 0.78rem; letter-spacing: 1px; text-transform: uppercase; }
 .footer-content span { color: rgba(255,255,255,0.6); }
 
 @media (min-width: 900px) {

@@ -1365,7 +1365,7 @@ function abrirFichaImpressao() {
   </div>
   <div class="ficha-fonte">
     Instrumento gerado pelo <strong>Guia do Enfermeiro APS</strong> – Maceió/AL &nbsp;|&nbsp;
-    Ref.: Nota Técnica Nº 06/2025 – SESAU/AL &nbsp;|&nbsp; App desenvolvido por Atllas Corp Breno Gomes Monteiro. Todos direitos reservados.
+    Ref.: Nota Técnica Nº 06/2025 – SESAU/AL &nbsp;|&nbsp; © 2026 Breno Gomes Monteiro. Todos os direitos reservados.
   </div>`;
 
   document.getElementById("print-overlay").style.display = "block";

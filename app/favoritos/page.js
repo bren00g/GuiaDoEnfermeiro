@@ -17,7 +17,7 @@ export default async function FavoritosPage() {
   const { data: authData } = await supabase.auth.getUser();
 
   if (!authData.user) {
-    redirect("/auth/login?next=/favoritos");
+    redirect("/legacy?auth=login&next=/favoritos");
   }
 
   const [{ data: favorites, error: favError }, { data: meds, error: medError }] = await Promise.all([

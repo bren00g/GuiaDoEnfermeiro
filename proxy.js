@@ -28,12 +28,13 @@ export async function proxy(request) {
   );
 
   const { data } = await supabase.auth.getUser();
-  const protectedPaths = ["/evolucoes", "/favoritos"];
+  const protectedPaths = ["/guia", "/evolucoes", "/favoritos"];
   const isProtected = protectedPaths.some((path) => request.nextUrl.pathname.startsWith(path));
 
   if (isProtected && !data.user) {
     const url = request.nextUrl.clone();
-    url.pathname = "/auth/login";
+    url.pathname = "/legacy";
+    url.searchParams.set("auth", "login");
     url.searchParams.set("next", request.nextUrl.pathname);
     return NextResponse.redirect(url);
   }

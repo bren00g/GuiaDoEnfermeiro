@@ -2,6 +2,7 @@ import Link from "next/link";
 import { createClient } from "../lib/supabaseServer";
 import { signOut } from "../app/auth/actions";
 import { hasSupabaseEnv } from "../lib/env";
+import { AuthModals } from "./AuthModals";
 
 const nav = [
   ["Prescricoes", "/prescricoes"],
@@ -24,7 +25,6 @@ export async function AppShell({ children }) {
     <div className="app-shell">
       <aside className="sidebar">
         <Link className="brand" href="/">
-          <span className="brand-mark" aria-hidden="true">+</span>
           <span>
             <strong>Guia do Enfermeiro APS</strong>
             <small>Cuidar · Acolher · Transformar</small>
@@ -47,10 +47,7 @@ export async function AppShell({ children }) {
               <button className="btn subtle" type="submit">Sair</button>
             </form>
           ) : (
-            <div className="auth-links">
-              <Link className="btn primary" href="/auth/login">Entrar</Link>
-              <Link className="btn subtle" href="/auth/signup">Criar conta</Link>
-            </div>
+            <AuthModals />
           )}
         </div>
       </aside>
