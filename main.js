@@ -713,9 +713,11 @@ const CALC_GRUPOS = [
 /* ============================================================
    UTILS
    ============================================================ */
-function mostrarToast(msg) {
+function mostrarToast(msg, type) {
   const toast = document.getElementById("toast");
-  toast.innerHTML = "✓ " + (msg || "Copiado com sucesso!");
+  const isError = type === "erro" || type === "error";
+  toast.classList.toggle("error", isError);
+  toast.innerHTML = (isError ? "⚠ " : "✓ ") + (msg || "Copiado com sucesso!");
   toast.classList.add("show");
   setTimeout(() => toast.classList.remove("show"), 2500);
 }
@@ -1820,10 +1822,17 @@ async function submitLegacySignup() {
   const fullName = (document.getElementById("legacy-signup-name")?.value || "").trim();
   const email = (document.getElementById("legacy-signup-email")?.value || "").trim();
   const password = document.getElementById("legacy-signup-password")?.value || "";
+  const passwordConfirm = document.getElementById("legacy-signup-password-confirm")?.value || "";
   const btn = document.getElementById("legacy-signup-submit");
 
-  if (!fullName || !email || !password) {
+  if (!fullName || !email || !password || !passwordConfirm) {
     setLegacyAuthStatus("legacy-auth-signup-status", "Preencha nome, email e senha.", "error");
+    return;
+  }
+
+  if (password !== passwordConfirm) {
+    mostrarToast("As senhas não coincidem", "erro");
+    setLegacyAuthStatus("legacy-auth-signup-status", "As senhas não coincidem.", "error");
     return;
   }
 
@@ -1952,6 +1961,24 @@ function initLegacyAuthModal() {
     }
   });
 
+}
+
+function initLegacyPasswordToggles() {
+  document.querySelectorAll("[data-password-toggle]").forEach((toggleBtn) => {
+    toggleBtn.addEventListener("click", () => {
+      const targetId = toggleBtn.getAttribute("data-password-toggle");
+      const targetInput = targetId ? document.getElementById(targetId) : null;
+      if (!targetInput) {
+        return;
+      }
+
+      const showing = targetInput.type === "text";
+      targetInput.type = showing ? "password" : "text";
+      toggleBtn.textContent = showing ? "👁" : "🙈";
+      toggleBtn.setAttribute("aria-label", showing ? "Mostrar senha" : "Ocultar senha");
+      toggleBtn.setAttribute("title", showing ? "Mostrar senha" : "Ocultar senha");
+    });
+  });
 }
 
 function setLegacyMedStatus(message, type) {
@@ -2115,6 +2142,7 @@ if (getLegacyAuthQueryValue("skipSplash") === "1" || localStorage.getItem(LEGACY
   document.body.classList.remove("splash-active");
 }
 initLegacyAuthModal();
+initLegacyPasswordToggles();
 initLegacyMedModal();
 loadLegacyLocalCustomMeds();
 renderizarMeds();

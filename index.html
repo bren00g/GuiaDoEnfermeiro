@@ -292,7 +292,27 @@
       <label>Email</label>
       <input id="legacy-signup-email" type="email" autocomplete="email" placeholder="seu@email.com" required>
       <label>Senha</label>
-      <input id="legacy-signup-password" type="password" autocomplete="new-password" minlength="8" placeholder="mínimo 8 caracteres" required>
+      <div class="legacy-auth-password-wrap">
+        <input id="legacy-signup-password" type="password" autocomplete="new-password" minlength="8" placeholder="mínimo 8 caracteres" required>
+        <button
+          type="button"
+          class="legacy-auth-pass-toggle"
+          data-password-toggle="legacy-signup-password"
+          aria-label="Mostrar senha"
+          title="Mostrar senha"
+        >👁</button>
+      </div>
+      <label>Confirmar Senha</label>
+      <div class="legacy-auth-password-wrap">
+        <input id="legacy-signup-password-confirm" type="password" autocomplete="new-password" minlength="8" placeholder="repita a senha" required>
+        <button
+          type="button"
+          class="legacy-auth-pass-toggle"
+          data-password-toggle="legacy-signup-password-confirm"
+          aria-label="Mostrar senha"
+          title="Mostrar senha"
+        >👁</button>
+      </div>
       <button id="legacy-signup-submit" class="sp-btn-primary" type="button">Cadastrar</button>
       <p class="legacy-auth-switch">Já possui conta? <button id="legacy-open-login" type="button">Entrar</button></p>
     </div>
