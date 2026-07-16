@@ -1974,7 +1974,7 @@ function initLegacyPasswordToggles() {
 
       const showing = targetInput.type === "text";
       targetInput.type = showing ? "password" : "text";
-      toggleBtn.textContent = showing ? "👁" : "🙈";
+      toggleBtn.textContent = showing ? "Mostrar" : "Ocultar";
       toggleBtn.setAttribute("aria-label", showing ? "Mostrar senha" : "Ocultar senha");
       toggleBtn.setAttribute("title", showing ? "Mostrar senha" : "Ocultar senha");
     });
