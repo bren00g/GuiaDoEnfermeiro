@@ -1553,17 +1553,28 @@ async function getLegacySupabaseClient() {
     throw new Error("SDK do Supabase nao carregado.");
   }
 
-  const response = await fetch("/api/public-config", { cache: "no-store" });
-  if (!response.ok) {
-    throw new Error("Nao foi possivel carregar a configuracao publica do Supabase.");
+  const metaUrl = document.querySelector('meta[name="legacy-supabase-url"]')?.content?.trim() || "";
+  const metaAnonKey = document.querySelector('meta[name="legacy-supabase-anon-key"]')?.content?.trim() || "";
+  const localUrl = (localStorage.getItem("legacy_supabase_url") || "").trim();
+  const localAnonKey = (localStorage.getItem("legacy_supabase_anon_key") || "").trim();
+  const injectedConfig = window.__LEGACY_SUPABASE__ || {};
+
+  const config = {
+    url: (window.LEGACY_SUPABASE_URL || injectedConfig.url || metaUrl || localUrl || "").trim(),
+    anonKey: (window.LEGACY_SUPABASE_ANON_KEY || injectedConfig.anonKey || metaAnonKey || localAnonKey || "").trim()
+  };
+
+  if (!config.url || !config.anonKey) {
+    throw new Error("Defina LEGACY_SUPABASE_URL e LEGACY_SUPABASE_ANON_KEY (window, meta ou localStorage).");
   }
 
-  const config = await response.json();
-  if (!config?.url || !config?.anonKey) {
-    throw new Error("Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.");
-  }
-
-  legacySupabaseClient = window.supabase.createClient(config.url, config.anonKey);
+  legacySupabaseClient = window.supabase.createClient(config.url, config.anonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
+    }
+  });
   return legacySupabaseClient;
 }
 
@@ -1572,8 +1583,22 @@ function getLegacyAuthQueryValue(key) {
   return params.get(key) || "";
 }
 
+function buildLegacySkipSplashUrl(basePath) {
+  const safeBasePath = basePath || window.location.pathname || "index.html";
+  const url = new URL(safeBasePath, window.location.origin);
+  url.searchParams.set("skipSplash", "1");
+  return `${url.pathname}${url.search}`;
+}
+
 function getLegacyAuthNextPath() {
-  return legacyAuthNextOverride || getLegacyAuthQueryValue("next") || "/legacy/index.html?skipSplash=1";
+  const rawNext = (legacyAuthNextOverride || getLegacyAuthQueryValue("next") || "").trim();
+  if (!rawNext || rawNext === "/guia") {
+    return buildLegacySkipSplashUrl(window.location.pathname);
+  }
+
+  const target = new URL(rawNext, window.location.origin);
+  target.searchParams.set("skipSplash", "1");
+  return `${target.pathname}${target.search}`;
 }
 
 function setLegacyAuthStatus(targetId, message, type) {
@@ -1650,26 +1675,16 @@ async function submitLegacyLogin() {
     }
 
     setLegacyAuthStatus("legacy-auth-login-status", "", "");
-    const response = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ email, password })
-    });
-
-    const payload = await response.json();
-    if (!response.ok) {
-      setLegacyAuthStatus("legacy-auth-login-status", payload?.error || "Falha no login.", "error");
+    const supabaseClient = await getLegacySupabaseClient();
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+    if (error) {
+      setLegacyAuthStatus("legacy-auth-login-status", error.message || "Falha no login.", "error");
       return;
     }
 
     setLegacyAuthStatus("legacy-auth-login-status", "Login realizado com sucesso.", "success");
     localStorage.setItem(LEGACY_GUIDE_ACCESS_KEY, "1");
-    const target = getLegacyAuthNextPath();
-    window.location.href = target.includes("skipSplash=1")
-      ? target
-      : "/legacy/index.html?skipSplash=1";
+    window.location.href = getLegacyAuthNextPath();
   } catch (error) {
     setLegacyAuthStatus("legacy-auth-login-status", error.message || "Falha no login.", "error");
   } finally {
@@ -1733,25 +1748,14 @@ async function submitLegacyLogout() {
       logoutBtn.textContent = "Saindo...";
     }
 
-    await fetch("/api/auth/logout", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
-
-    try {
-      const supabaseClient = await getLegacySupabaseClient();
-      await supabaseClient.auth.signOut();
-    } catch (_) {
-      // Evita bloquear o logout se o cliente browser nao estiver disponivel.
-    }
+    const supabaseClient = await getLegacySupabaseClient();
+    await supabaseClient.auth.signOut();
 
     localStorage.removeItem(LEGACY_GUIDE_ACCESS_KEY);
-    window.location.href = "/legacy/index.html?auth=login";
+    window.location.href = `${window.location.pathname}?auth=login`;
   } catch (_) {
     localStorage.removeItem(LEGACY_GUIDE_ACCESS_KEY);
-    window.location.href = "/legacy/index.html?auth=login";
+    window.location.href = `${window.location.pathname}?auth=login`;
   } finally {
     if (logoutBtn) {
       logoutBtn.disabled = false;
@@ -1926,30 +1930,9 @@ async function submitLegacyMedicamento() {
       respaldo_legal: respaldoLegal
     };
 
-    let insertError = null;
-    let usedFallbackTable = false;
-
-    const { error } = await supabaseClient.from("medicamentos").insert(payload);
-    insertError = error;
-
-    if (insertError && /Could not find the table|relation .* does not exist|row-level security policy/i.test(insertError.message || "")) {
-      usedFallbackTable = true;
-      const fallbackPayload = {
-        nome,
-        concentracao: `${quantidadeRaw} ${unidade}`,
-        apresentacao,
-        indicacao,
-        protocolo: `[${categoriaLabel}] ${respaldoLegal}`
-      };
-      const fallback = await supabaseClient.from("custom_medicamentos").insert(fallbackPayload);
-      insertError = fallback.error;
-    }
-
-    const insertErrorMessage = insertError?.message || "";
-    const blockedByRls = /row-level security policy/i.test(insertErrorMessage);
-
-    if (insertError && !blockedByRls) {
-      setLegacyMedStatus(insertErrorMessage || "Falha ao salvar no Supabase.", "error");
+    const { error: insertError } = await supabaseClient.from("medicamentos").insert(payload);
+    if (insertError) {
+      setLegacyMedStatus(insertError.message || "Falha ao salvar no Supabase.", "error");
       return;
     }
 
@@ -1963,22 +1946,12 @@ async function submitLegacyMedicamento() {
       r: respaldoLegal
     };
 
-    if (blockedByRls) {
-      saveLegacyLocalCustomMed(medViewModel);
-    }
-
     MEDS.unshift(medViewModel);
 
     renderizarMeds();
     clearLegacyMedForm();
     closeLegacyMedModal();
-    if (blockedByRls) {
-      showToast("✓ Salvo localmente no navegador (RLS ativo no Supabase).");
-    } else {
-      showToast(usedFallbackTable
-        ? "✓ Medicamento salvo (modo compatibilidade)."
-        : "✓ Medicamento cadastrado com sucesso!");
-    }
+    mostrarToast("Medicamento cadastrado com sucesso!");
   } catch (error) {
     setLegacyMedStatus(error.message || "Erro inesperado ao cadastrar medicamento.", "error");
   } finally {
