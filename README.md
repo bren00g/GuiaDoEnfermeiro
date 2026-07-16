@@ -1,116 +1,93 @@
-# 🏠 Guia do Enfermeiro APS — Maceió 2026
+# Guia do Enfermeiro APS - Estrategia Final de Entrega
 
-**Desenvolvido por Breno Gomes** | breno.monteiro@eenf.ufal.br  
-_Cuidar · Acolher · Transformar_
+Data de referencia: 2026-07-16.
 
----
+Este README oficializa a estrategia de encerramento do projeto.
 
-## 📋 Descrição
+## 1. Estrategia final definida
 
-Aplicativo web estático para enfermeiros da Atenção Primária à Saúde (APS) de Maceió/AL. Reúne em um único lugar:
-- Prescrições de medicamentos com respaldo legal
-- Calendário vacinal completo (PNI)
-- Calculadora de risco gestacional (Nota Técnica 06/2025 – SESAU/AL)
-- Modelos de evolução SOAP com editor Rich Text
+O projeto sera finalizado com a versao legacy/estatica como produto oficial.
 
----
+Alvo de producao:
+1. GitHub Pages (arquivos estaticos na raiz)
+2. Interface e comportamento baseados na versao legacy
 
-## ✅ Funcionalidades Implementadas
+## 2. Fonte de verdade do frontend
 
-### 💊 Prescrições
-- Lista completa de medicamentos com concentração, apresentação (incluindo vias tópicas), indicação e respaldo legal
-- Filtro por categorias: IST, Contracepção, PEP, Saúde da Mulher, Pré-natal, Criança, Tuberculose, Crônicas, Tabagismo, Dengue, **Curativos**, Outros
-- Busca em tempo real por nome, concentração ou indicação
-- Botão "Copiar para o PEC" com nome + concentração + apresentação + indicação + protocolo
-- Medicamentos atualizados incluindo:
-  - **Portaria 223/2015 SMS/Maceió** (sinvastatina, salbutamol, espiramicina, papaínas, AGE, alginato, permanganato, etc.)
-  - **Nota Técnica 001/2022 CAITS** — ITU em gestantes (cefalexina, amoxicilina+clavulanato)
-  - **Nota Técnica 04/2025 CAITS** — Prevenção de pré-eclâmpsia (carbonato de cálcio)
-  - Vias tópicas incluídas (metronidazol gel, nistatina creme, aciclovir creme, sulfadiazina de prata, etc.)
+A fonte de verdade de desenvolvimento fica em:
+1. [public/legacy/index.html](public/legacy/index.html)
+2. [public/legacy/main.js](public/legacy/main.js)
+3. [public/legacy/style.css](public/legacy/style.css)
 
-### 💉 Calendário Vacinal
-- Grupos: Crianças, Adolescentes, Adultos, Gestantes, Idosos
-- Timeline visual com todas as vacinas, via de administração, dose e descrição
+Para deploy no GitHub Pages, a raiz deve estar sincronizada com essa versao:
+1. [index.html](index.html)
+2. [main.js](main.js)
+3. [style.css](style.css)
 
-### 🧮 Calculadora de Risco Gestacional
-- Instrumento conforme **Nota Técnica Nº 06/2025 – SESAU/Alagoas**
-- 6 grupos de critérios (socioambientais, nutricional, obstétricos, gestação atual, clínicos, intercorrências)
-- Pontuação automática em tempo real
-- Classificação: ✅ Risco Habitual (≤4) | ⚠️ Médio Risco (5–9) | 🔴 Alto Risco (≥10)
-- **Ficha de impressão** completa com dados da gestante, tabela de critérios marcados e assinatura
-- Suporte a impressão/PDF via `window.print()`
+## 3. Escopo funcional de fechamento
 
-### 📝 Evoluções SOAP (Rich Text)
-- **Editor Rich Text** com toolbar: negrito, itálico, sublinhado, listas, títulos, remover formatação
-- Modelos pré-preenchidos com formatação HTML semântica (h2, h3, ul, li, strong)
-- Cópia inteligente: converte o HTML para texto plano formatado (apto para colar no PEC/e-SUS)
-- Grupos disponíveis:
-  - **Hiperdia / Renovação de Receita**
-  - **Puericultura** (masculino e feminino)
-  - **Pré-natal** (com dados obstétricos detalhados)
-  - **Urgência / Acolhimento com Classificação de Risco**
-  - **Curativo / Tratamento de Ferida** *(novo — avaliação completa de ferida)*
-  - **CCO (Citologia Oncótica)**
-  - **Teste Rápido (TR)**
+Escopo previsto para conclusao:
+1. Prescricoes com busca, filtros e copia para PEC
+2. Calendario vacinal
+3. Calculadora de risco gestacional
+4. Evolucoes SOAP
+5. Fluxo de autenticacao no frontend legado (login/cadastro/logout)
+6. Novo medicamento via modal legado
 
-### 🎨 Interface
-- Logo SVG personalizada (jangada + chapéu nordestino + cruz médica) no header e **favicon do navegador**
-- Favicon configurado para: aba do navegador, favoritos, atalho de tela iOS/Android
-- Design responsivo mobile-first
-- Paleta: azul marinho (#002D6D), laranja (#FF8A00), azul céu (#4DB6E8)
+Observacao importante:
+1. Como o alvo final e estatico, qualquer funcionalidade que dependa de API server-side do Next so funciona se houver backend ativo fora do GitHub Pages.
 
----
+## 4. Situacao da arquitetura Next/Supabase
 
-## 🗂 Estrutura de Arquivos
+A camada Next/Supabase permanece no repositorio como trilha tecnica secundaria, mas nao e o canal oficial de entrega desta fase.
 
-```plaintext
-/
-├── css/
-│   └── style.css    # Folha de estilos principal
-├── js/
-│   └── main.js      # Lógica e interatividade do aplicativo
-├── index.html       # Estrutura principal da página (HTML)
-├── favicon.svg      # Ícone para navegador e atalhos
-└── README.md        # Esta documentação
-```
+Arquivos que continuam existindo para referencia/evolucao futura:
+1. [app](app)
+2. [app/api](app/api)
+3. [lib](lib)
+4. [proxy.js](proxy.js)
+5. [supabase](supabase)
 
----
+## 5. O que falta para considerar migracao encerrada
 
-## 🔗 URIs / Navegação
+Pendencias finais de operacao:
+1. Garantir sincronizacao consistente public/legacy -> raiz antes de cada release
+2. Revisar README/docs para remover ambiguidade de deploy
+3. Executar checklist de smoke test na versao raiz publicada
+4. Confirmar que o GitHub Pages esta publicando o commit correto
 
-| Rota | Descrição |
-|------|-----------|
-| `/` (index.html) | Página principal — inicia na aba Prescrições |
-| `#` tab-meds | Aba de Prescrições |
-| `#` tab-vacinas | Aba Calendário Vacinal |
-| `#` tab-calculadora | Calculadora de Risco Gestacional |
-| `#` tab-evolucoes | Evoluções SOAP |
+Pendencias opcionais (pos-entrega):
+1. Limpeza de codigo duplicado entre raiz e public/legacy
+2. Arquivamento formal da trilha Next/Supabase em documento tecnico separado
 
----
+## 6. Fluxo de release (oficial)
 
-## 📦 Dependências (CDN)
+Antes do push:
+1. Atualizar arquivos em [public/legacy/index.html](public/legacy/index.html), [public/legacy/main.js](public/legacy/main.js), [public/legacy/style.css](public/legacy/style.css)
+2. Sincronizar para [index.html](index.html), [main.js](main.js), [style.css](style.css)
+3. Revisar diff final apenas na raiz e no legacy
 
-- **Google Fonts** — Poppins (300–800)
-- Nenhuma outra dependência externa (JS/CSS 100% inline)
+Validacao manual minima:
+1. Abrir Prescricoes e testar busca/filtro/copia
+2. Abrir modal Novo medicamento
+3. Testar login/cadastro/logout
+4. Testar Calculadora e impressao
+5. Testar Evolucoes SOAP
 
----
+Publicacao:
+1. Commit
+2. Push na branch de publicacao
+3. Aguardar build do GitHub Pages
+4. Hard refresh no navegador
 
-## 🚀 Deploy
+## 7. Riscos conhecidos
 
-Para publicar, use a **aba Publish** do Genspark.
+1. Divergencia entre raiz e public/legacy pode fazer funcionalidades parecerem "sumir" no deploy
+2. Recursos dependentes de backend podem ter comportamento parcial em hospedagem puramente estatica
 
+## 8. Definicao de sucesso (Done)
 
----
-
-## ⚖️ Referências Normativas
-
-- Portaria 223/2015 – SMS Maceió
-- PCDT IST/MS 2022
-- PCDT Pré-natal/MS 2022
-- Nota Técnica Nº 06/2025 – SESAU/AL (Estratificação de Risco Gestacional)
-- Nota Técnica Nº 001/2022 – CAITS (ITU em Gestantes)
-- Nota Técnica Nº 04/2025 – CAITS (Prevenção de Pré-eclâmpsia)
-- PCDT PEP/MS 2021
-- PCDT TB/MS 2019 | PCDT ILTB/MS 2022
-- Resolução 801/2026 COFEN
-- PNI – Programa Nacional de Imunizações 2024/2025
+A migracao sera considerada concluida quando:
+1. A versao publicada no GitHub Pages reproduzir integralmente o comportamento esperado da versao legacy
+2. O processo public/legacy -> raiz estiver estavel e documentado
+3. O time puder publicar novas alteracoes sem regressao de ambiente
