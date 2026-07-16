@@ -1350,6 +1350,35 @@ body.splash-active {
   font-family: 'Poppins', sans-serif;
   font-size: 0.92rem;
 }
+.legacy-auth-password-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.legacy-auth-password-wrap input {
+  margin-bottom: 0;
+  padding-right: 44px;
+}
+.legacy-auth-pass-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  width: 30px;
+  height: 30px;
+  border: 1px solid #e2e6ed;
+  border-radius: 999px;
+  background: #fff;
+  color: #64748b;
+  cursor: pointer;
+  font-size: 0.9rem;
+  line-height: 1;
+}
+.legacy-auth-pass-toggle:hover {
+  color: #1f2a37;
+}
+.toast.error {
+  background: #7f1d1d;
+}
 
 .legacy-auth-view .sp-btn-primary {
   width: 100%;
