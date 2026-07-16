@@ -1,0 +1,159 @@
+.triggerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid #2a1fff;
+  border-radius: 12px;
+  background: #2a1fff;
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.triggerBtn:hover {
+  background: #1a0fe8;
+  border-color: #1a0fe8;
+}
+
+.toast {
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  font-size: 0.86rem;
+  font-weight: 600;
+}
+
+.success {
+  background: #ecfdf5;
+  color: #166534;
+}
+
+.error {
+  background: #fff1f2;
+  color: #991b1b;
+}
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  background: rgba(10, 18, 30, 0.55);
+  padding: 16px;
+}
+
+.modal {
+  width: min(720px, 100%);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  border-radius: 18px;
+  border: 1px solid #e2e6ed;
+  background: #fff;
+  box-shadow: 0 18px 52px rgba(15, 23, 42, 0.2);
+  padding: 22px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.closeBtn {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  border: 1px solid #e2e6ed;
+  background: #fff;
+  color: #64748b;
+  font-size: 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.form {
+  display: grid;
+  gap: 12px;
+}
+
+.form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #1f2a37;
+}
+
+.form input,
+.form select,
+.form textarea {
+  width: 100%;
+  border: 1px solid #d8e2ef;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  color: #1a2a3a;
+  background: #fff;
+}
+
+.form textarea {
+  resize: vertical;
+}
+
+.row2 {
+  display: grid;
+  grid-template-columns: 1fr 180px;
+  gap: 12px;
+}
+
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.subtleBtn,
+.primaryBtn {
+  min-height: 40px;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.subtleBtn {
+  border: 1px solid #d8e2ef;
+  background: #fff;
+  color: #1f2a37;
+}
+
+.primaryBtn {
+  border: 1px solid #2a1fff;
+  background: #2a1fff;
+  color: #fff;
+}
+
+.subtleBtn:disabled,
+.primaryBtn:disabled,
+.closeBtn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+@media (max-width: 680px) {
+  .row2 {
+    grid-template-columns: 1fr;
+  }
+}

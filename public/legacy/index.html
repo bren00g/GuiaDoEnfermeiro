@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia do Enfermeiro APS - Maceió 2026</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="shortcut icon" href="favicon.svg">
+<link rel="apple-touch-icon" href="favicon.svg">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- ============================================================
+     SPLASH SCREEN — LANDING SCROLLÁVEL
+     ============================================================ -->
+<div id="splash">
+  <canvas id="splash-canvas"></canvas>
+
+  <!-- HERO -->
+  <div class="sp-hero">
+    <nav class="sp-nav">
+      <div class="sp-nav-logo">
+        <span>Guia APS</span>
+      </div>
+      <div class="sp-nav-actions">
+        <a id="sp-login-btn" class="sp-nav-btn sp-nav-btn-ghost" href="/auth/login">Login</a>
+        <a id="sp-signup-btn" class="sp-nav-btn sp-nav-btn-primary" href="/auth/signup">Criar conta</a>
+      </div>
+    </nav>
+
+    <div class="sp-hero-content">
+      <div class="sp-eyebrow">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="6" fill="#2A1FFF" opacity=".2"/><circle cx="6" cy="6" r="3" fill="#2A1FFF"/></svg>
+        Atenção Primária à Saúde · Maceió/AL
+      </div>
+
+      <h1 class="sp-hero-title">
+        Guia do<br><em>Enfermeiro</em><br>APS
+      </h1>
+
+      <p class="sp-hero-sub">
+        Protocolos clínicos, prescrições, calendário vacinal, risco gestacional
+        e evoluções SOAP — tudo em conformidade com o SUS e a SESAU/AL.
+      </p>
+
+      <div class="sp-hero-actions">
+        <button class="sp-btn-primary" onclick="openLegacyAuthModal('login', '/guia')">
+          Começar Agora
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+        <a class="sp-btn-ghost" href="#sp-features-anchor" onclick="event.preventDefault();document.getElementById('sp-features-anchor').scrollIntoView({behavior:'smooth'})">
+          Explorar Recursos
+        </a>
+      </div>
+    </div>
+
+    <div class="sp-scroll-hint">
+      <span>Role para explorar</span>
+      <div class="arrow"></div>
+    </div>
+  </div>
+
+  <!-- NÚMEROS -->
+  <div class="sp-strip">
+    <div class="sp-strip-item"><strong>130+</strong><span>Medicamentos</span></div>
+    <div class="sp-strip-item"><strong>PNI</strong><span>Calendário 2024</span></div>
+    <div class="sp-strip-item"><strong>SESAU</strong><span>NT 06/2025</span></div>
+    <div class="sp-strip-item"><strong>SOAP</strong><span>7 modelos</span></div>
+  </div>
+
+  <!-- FUNCIONALIDADES -->
+  <div class="sp-features" id="sp-features-anchor">
+    <div class="sp-section-label">O que você encontra</div>
+    <h2 class="sp-section-title">Tudo que o enfermeiro<br>precisa na APS</h2>
+    <p class="sp-section-sub">
+      Ferramentas clínicas baseadas em evidências, prontas para uso no PEC/e-SUS.
+    </p>
+
+    <div class="sp-cards">
+      <div class="sp-feat-card" style="--fc:#2A1FFF;--fi:rgba(42,31,255,0.08)" onclick="fecharSplashPara('meds')">
+        <div class="sp-feat-icon">💊</div>
+        <div class="sp-feat-text">
+          <h3>Prescrições de Enfermagem</h3>
+          <p>130+ medicamentos da lista municipal (Portaria 223/2015), com indicação, dose e respaldo legal. Copiar para o PEC com 1 toque.</p>
+        </div>
+        <span class="sp-feat-arrow">›</span>
+      </div>
+
+      <div class="sp-feat-card" style="--fc:#0077CC;--fi:rgba(0,119,204,0.08)" onclick="fecharSplashPara('vacinas')">
+        <div class="sp-feat-icon">💉</div>
+        <div class="sp-feat-text">
+          <h3>Calendário Vacinal PNI</h3>
+          <p>Calendário completo por faixa etária: crianças, adolescentes, adultos, gestantes e idosos — baseado no PNI 2024.</p>
+        </div>
+        <span class="sp-feat-arrow">›</span>
+      </div>
+
+      <div class="sp-feat-card" style="--fc:#d97706;--fi:rgba(217,119,6,0.08)" onclick="fecharSplashPara('calculadora')">
+        <div class="sp-feat-icon">🤰</div>
+        <div class="sp-feat-text">
+          <h3>Risco Gestacional</h3>
+          <p>Estratificação conforme a Nota Técnica Nº 06/2025 SESAU/AL. Gera ficha pré-preenchida para impressão ou SISREG.</p>
+        </div>
+        <span class="sp-feat-arrow">›</span>
+      </div>
+
+      <div class="sp-feat-card" style="--fc:#16a34a;--fi:rgba(22,163,74,0.08)" onclick="fecharSplashPara('evolucoes')">
+        <div class="sp-feat-icon">📝</div>
+        <div class="sp-feat-text">
+          <h3>Evoluções SOAP</h3>
+          <p>Modelos editáveis para Hiperdia, Puericultura, Pré-natal, Urgência, Curativo, CCO e Teste Rápido. Copiar pronto para o prontuário.</p>
+        </div>
+        <span class="sp-feat-arrow">›</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- CTA FINAL -->
+  <div class="sp-cta">
+    <h2>Pronto para começar?</h2>
+    <p>Acesse agora e tenha todos os protocolos<br>na palma da mão.</p>
+    <button class="sp-btn-primary" onclick="openLegacyAuthModal('login', '/guia')">
+      Acessar o Guia
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </button>
+    <p class="sp-cta-credit">
+      <strong>© 2026 Breno Gomes Monteiro. Todos os direitos reservados.</strong><br>
+      USF Village Campestre II · Maceió/AL · 2026 · Res. 801/2026 COFEN
+    </p>
+  </div>
+
+</div>
+
+<!-- ============================================================
+     SIDEBAR / HEADER
+     ============================================================ -->
+<div class="header">
+  <div class="header-top">
+    <div class="logo">
+      <div>
+        <h1>Guia do Enfermeiro APS</h1>
+        <small>Atenção Primária à Saúde · Maceió/AL</small>
+        <span class="logo-slogan">Cuidar · Acolher · Transformar</span>
+      </div>
+    </div>
+    <div class="badge">Res. 801/2026</div>
+  </div>
+  <nav class="main-tabs" role="tablist" aria-label="Navegação principal">
+    <button class="tab-btn active" id="tab-meds" role="tab" aria-selected="true" aria-controls="view-meds" onclick="switchView('meds')">Prescrições</button>
+    <button class="tab-btn" id="tab-vacinas" role="tab" aria-selected="false" aria-controls="view-vacinas" onclick="switchView('vacinas')">Calendário Vacinal</button>
+    <button class="tab-btn" id="tab-calculadora" role="tab" aria-selected="false" aria-controls="view-calculadora" onclick="switchView('calculadora')">Risco Gestacional</button>
+    <button class="tab-btn" id="tab-evolucoes" role="tab" aria-selected="false" aria-controls="view-evolucoes" onclick="switchView('evolucoes')">Evoluções</button>
+  </nav>
+
+  <!-- Sidebar footer (desktop only) -->
+  <div class="sidebar-footer">
+   
+    <p style="font-size: 0.58rem; color: #ffffff; font-weight: 600; margin-bottom: 2px; left: center; line-height: 1.3;">
+  © 2026 Breno Gomes Monteiro
+  </p>
+  <p style="font-size: 0.58rem; color: #ffffff; font-weight: 600; margin-bottom: 2px; left: center; line-height: 1.3;">
+  Todos os direitos reservados.
+  </p>
+    <p style="font-size:0.58rem;color:rgba(255,255,255,0.45);">breno.monteiro@eenf.ufal.br</p>
+    <button id="legacy-logout-btn" class="header-logout-btn" type="button">Sair</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     MAIN CONTENT AREA
+     ============================================================ -->
+<div id="app-main">
+
+<!-- ============================================================
+     VIEW: PRESCRIÇÕES
+     ============================================================ -->
+<div id="view-meds" role="tabpanel" aria-labelledby="tab-meds">
+  <div class="search-wrap">
+    <input type="text" id="searchInput" placeholder="Buscar medicamento ou indicação...">
+    <button class="clear-btn" id="clearBtn" onclick="limparBusca()">✕</button>
+  </div>
+  <div class="filter-bar" id="filterBar"></div>
+  <div class="results-bar">
+    <div class="results-count" id="resultsCount"></div>
+    <button id="open-med-modal-btn" class="meds-add-btn" type="button">+ Novo medicamento</button>
+  </div>
+  <div id="lista"></div>
+</div>
+
+<!-- ============================================================
+     VIEW: CALENDÁRIO VACINAL
+     ============================================================ -->
+<div id="view-vacinas" role="tabpanel" aria-labelledby="tab-vacinas" style="display:none;">
+  <div class="sub-filter-bar" id="vacinaFilters"></div>
+  <div id="lista-vacinas" style="padding: 4px 16px 90px;"></div>
+</div>
+
+<!-- ============================================================
+     VIEW: CALCULADORA RISCO GESTACIONAL
+     ============================================================ -->
+<div id="view-calculadora" role="tabpanel" aria-labelledby="tab-calculadora" style="display:none;">
+  <div class="calc-header-box">
+    <h2> Estratificação de Risco Gestacional</h2>
+    <p>Instrumento conforme <strong>Nota Técnica Nº 06/2025 – SESAU/Alagoas</strong> (SUAPAE/GAEST/SCMCA).<br>
+    ✅ Risco Habitual: até 4 pts &nbsp;|&nbsp; ⚠️ Médio Risco: 5–9 pts &nbsp;|&nbsp; 🔴 Alto Risco: ≥ 10 pts</p>
+  </div>
+  <div class="calc-id-grid">
+    <div class="full"><div class="field-label">Nome da Gestante</div><input class="field-input" id="id-nome" type="text" placeholder="Nome completo"></div>
+    <div><div class="field-label">Município</div><input class="field-input" id="id-municipio" type="text" placeholder="Município"></div>
+    <div><div class="field-label">UBS de Origem</div><input class="field-input" id="id-ubs" type="text" placeholder="UBS"></div>
+    <div><div class="field-label">Data de Nascimento</div><input class="field-input" id="id-dn" type="date"></div>
+    <div><div class="field-label">Telefone</div><input class="field-input" id="id-tel" type="tel" placeholder="(82) 99999-9999"></div>
+    <div><div class="field-label">Enf. / Médico Responsável</div><input class="field-input" id="id-prof" type="text" placeholder="Nome do profissional"></div>
+    <div><div class="field-label">Data da Consulta</div><input class="field-input" id="id-data" type="date"></div>
+    <div><div class="field-label">Idade Gestacional</div><input class="field-input" id="id-ig" type="text" placeholder="ex: 12 sem 3 dias"></div>
+  </div>
+  <form id="gestationalRiskForm">
+    <!-- Grupos da calculadora gerados pelo JS -->
+    <div id="calc-grupos-container"></div>
+  </form>
+  <div class="result-panel">
+    <div class="res-score-view" id="scoreDisplay">0 <span>pontos</span></div>
+    <div class="res-status-tag" id="statusTag">Risco Habitual</div>
+    <div class="res-box-info b-baixo" id="condutaBox">
+      <h4>Diretriz de Conduta</h4>
+      <p id="condutaTexto">Pré-natal realizado na APS, com reclassificação de risco a cada consulta.</p>
+    </div>
+    <button class="btn-print-ficha" onclick="abrirFichaImpressao()"> Imprimir Ficha de Estratificação</button>
+    <button class="btn-reset-calc" onclick="resetCalculator()"> Limpar Formulário</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     VIEW: EVOLUÇÕES
+     ============================================================ -->
+<div id="view-evolucoes" role="tabpanel" aria-labelledby="tab-evolucoes" style="display:none;">
+  <div class="sub-filter-bar" id="evolucaoFilters"></div>
+  <div id="lista-evolucoes"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-wrapper">
+  <footer class="footer">
+    <div class="footer-content">
+      <span class="footer-slogan">Cuidar · Acolher · Transformar</span>
+      <span style="color:rgba(255,255,255,0.5);font-size:0.72rem;margin-bottom:4px;">Web App desenvolvido por</span>
+      <span style="font-size:0.95rem;font-weight:700;color:#fff;letter-spacing:0.2px;margin-bottom:2px;">Equipe de Desenvolvimento</span>
+      <strong style="color:#fff;font-size:0.82rem;">© 2026 Breno Gomes Monteiro. Todos os direitos reservados.</strong>
+    </div>
+  </footer>
+</div>
+
+</div><!-- /#app-main -->
+
+<!-- TOAST -->
+<div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true">✓ Copiado com sucesso!</div>
+
+<!-- PRINT OVERLAY -->
+<div id="print-overlay">
+  <button class="print-close-btn" onclick="fecharFichaImpressao()">✕ Fechar</button>
+  <div class="print-btn-bar">
+    <button class="print-do-btn" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button>
+  </div>
+  <div class="print-container" id="print-container"></div>
+</div>
+
+<!-- AUTH MODAL LEGADO -->
+<div id="legacy-auth-backdrop" class="legacy-auth-backdrop" hidden>
+  <section class="legacy-auth-modal" role="dialog" aria-modal="true" aria-label="Autenticacao">
+    <button id="legacy-auth-close" class="legacy-auth-close" type="button" aria-label="Fechar">×</button>
+
+    <div id="legacy-auth-login" class="legacy-auth-view">
+      <h2>Entrar</h2>
+      <p>Acesse suas evoluções, favoritos e medicamentos personalizados.</p>
+      <div id="legacy-auth-login-status" class="legacy-auth-status" hidden></div>
+      <label>Email</label>
+      <input id="legacy-login-email" type="email" autocomplete="email" placeholder="seu@email.com" required>
+      <label>Senha</label>
+      <input id="legacy-login-password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+      <button id="legacy-login-submit" class="sp-btn-primary" type="button">Entrar</button>
+      <p class="legacy-auth-switch">Ainda não tem conta? <button id="legacy-open-signup" type="button">Criar conta</button></p>
+    </div>
+
+    <div id="legacy-auth-signup" class="legacy-auth-view" hidden>
+      <h2>Criar conta</h2>
+      <p>Use um email individual. Seus dados ficam isolados por usuário.</p>
+      <div id="legacy-auth-signup-status" class="legacy-auth-status" hidden></div>
+      <label>Nome completo</label>
+      <input id="legacy-signup-name" type="text" autocomplete="name" placeholder="Seu nome" required>
+      <label>Email</label>
+      <input id="legacy-signup-email" type="email" autocomplete="email" placeholder="seu@email.com" required>
+      <label>Senha</label>
+      <input id="legacy-signup-password" type="password" autocomplete="new-password" minlength="8" placeholder="mínimo 8 caracteres" required>
+      <button id="legacy-signup-submit" class="sp-btn-primary" type="button">Cadastrar</button>
+      <p class="legacy-auth-switch">Já possui conta? <button id="legacy-open-login" type="button">Entrar</button></p>
+    </div>
+  </section>
+</div>
+
+<!-- MODAL: NOVO MEDICAMENTO -->
+<div id="legacy-med-backdrop" class="legacy-med-backdrop" hidden>
+  <section class="legacy-med-modal" role="dialog" aria-modal="true" aria-label="Cadastrar medicamento">
+    <button id="legacy-med-close" class="legacy-med-close" type="button" aria-label="Fechar">×</button>
+    <h2>Novo medicamento</h2>
+    <p>Cadastro rápido para incluir medicamento no guia e salvar no Supabase.</p>
+    <div id="legacy-med-status" class="legacy-med-status" hidden></div>
+
+    <div class="legacy-med-form">
+      <label>Nome</label>
+      <input id="legacy-med-nome" type="text" placeholder="Ex.: Azitromicina" required>
+
+      <label>Categoria</label>
+      <select id="legacy-med-categoria" required>
+        <option>IST</option>
+        <option>Contracepção</option>
+        <option>PrEP / PEP</option>
+        <option>Saúde da Mulher</option>
+        <option>Pré-natal</option>
+        <option>Criança</option>
+        <option>Tuberculose</option>
+        <option>Crônicas</option>
+        <option>Tabagismo</option>
+        <option>Dengue</option>
+        <option>Curativos</option>
+        <option>Outros</option>
+      </select>
+
+      <div class="legacy-med-row2">
+        <div>
+          <label>Quantidade/Concentração</label>
+          <input id="legacy-med-quantidade" type="number" step="any" min="0" placeholder="Ex.: 500" required>
+        </div>
+        <div>
+          <label>Unidade</label>
+          <select id="legacy-med-unidade" required>
+            <option>mg</option>
+            <option>ui</option>
+            <option>g</option>
+            <option>ml</option>
+            <option>mcg</option>
+            <option>mEq</option>
+            <option>Outro</option>
+          </select>
+        </div>
+      </div>
+
+      <label>Apresentação</label>
+      <input id="legacy-med-apresentacao" type="text" placeholder="Ex.: Comprimido, Ampola, Frasco" required>
+
+      <label>Indicação</label>
+      <textarea id="legacy-med-indicacao" rows="3" required></textarea>
+
+      <label>Respaldo Legal</label>
+      <textarea id="legacy-med-respaldo" rows="3" required></textarea>
+
+      <div class="legacy-med-actions">
+        <button id="legacy-med-cancel" class="sp-btn-ghost" type="button">Cancelar</button>
+        <button id="legacy-med-submit" class="sp-btn-primary" type="button">Salvar medicamento</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="main.js"></script>
+</body>
+</html>

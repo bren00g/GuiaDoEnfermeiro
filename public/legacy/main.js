@@ -1365,7 +1365,7 @@ function abrirFichaImpressao() {
   </div>
   <div class="ficha-fonte">
     Instrumento gerado pelo <strong>Guia do Enfermeiro APS</strong> – Maceió/AL &nbsp;|&nbsp;
-    Ref.: Nota Técnica Nº 06/2025 – SESAU/AL &nbsp;|&nbsp; © 2026 Breno Gomes Monteiro. Todos os direitos reservados.
+    Ref.: Nota Técnica Nº 06/2025 – SESAU/AL &nbsp;|&nbsp; © 2026 Breno Gomes Monteiro. Todos os direitos reservados..
   </div>`;
 
   document.getElementById("print-overlay").style.display = "block";
@@ -1467,7 +1467,10 @@ function fecharFichaImpressao() {
 function fecharSplash() {
   const splash = document.getElementById('splash');
   splash.classList.add('hiding');
-  setTimeout(() => { splash.style.display = 'none'; }, 450);
+  setTimeout(() => {
+    splash.style.display = 'none';
+    document.body.classList.remove('splash-active');
+  }, 450);
 }
 
 function fecharSplashPara(aba) {
@@ -1480,4 +1483,542 @@ function fecharSplashPara(aba) {
 buildCalculadora();
 loadCalculatorState(); // Carrega dados salvos ao iniciar
 calculateRisk(); // Calcula o risco com base nos dados carregados
+renderizarMeds();
+
+/* ============================================================
+   AUTH MODAL (LEGADO) + SUPABASE
+   ============================================================ */
+let legacySupabaseClient = null;
+let legacyAuthNextOverride = "";
+const LEGACY_GUIDE_ACCESS_KEY = "legacyGuideAccess";
+const LEGACY_LOCAL_CUSTOM_MEDS_KEY = "legacyLocalCustomMeds";
+
+const MED_CATEGORIA_ID_MAP = {
+  "IST": "IST",
+  "Contracepção": "Contra",
+  "PrEP / PEP": "PrEP_PEP",
+  "Saúde da Mulher": "Mulher",
+  "Pré-natal": "Prenatal",
+  "Criança": "Crianca",
+  "Tuberculose": "TB",
+  "Crônicas": "Cronicas",
+  "Tabagismo": "Tabagismo",
+  "Dengue": "Dengue",
+  "Curativos": "Curativo",
+  "Outros": "Outros"
+};
+
+function loadLegacyLocalCustomMeds() {
+  try {
+    const raw = localStorage.getItem(LEGACY_LOCAL_CUSTOM_MEDS_KEY);
+    if (!raw) {
+      return;
+    }
+
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || parsed.length === 0) {
+      return;
+    }
+
+    for (let i = parsed.length - 1; i >= 0; i -= 1) {
+      const med = parsed[i];
+      if (!med || !med.n || !med.c || !med.a || !med.u || !med.cat || !med.r) {
+        continue;
+      }
+      MEDS.unshift(med);
+    }
+  } catch (_) {
+    // Ignora erros de parse/localStorage para nao quebrar o app legado.
+  }
+}
+
+function saveLegacyLocalCustomMed(med) {
+  try {
+    const raw = localStorage.getItem(LEGACY_LOCAL_CUSTOM_MEDS_KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    const safeList = Array.isArray(list) ? list : [];
+    safeList.unshift(med);
+    localStorage.setItem(LEGACY_LOCAL_CUSTOM_MEDS_KEY, JSON.stringify(safeList));
+  } catch (_) {
+    // Se falhar localStorage, o item continua visivel na sessao atual via MEDS.unshift.
+  }
+}
+
+async function getLegacySupabaseClient() {
+  if (legacySupabaseClient) {
+    return legacySupabaseClient;
+  }
+
+  if (!window.supabase || typeof window.supabase.createClient !== "function") {
+    throw new Error("SDK do Supabase nao carregado.");
+  }
+
+  const response = await fetch("/api/public-config", { cache: "no-store" });
+  if (!response.ok) {
+    throw new Error("Nao foi possivel carregar a configuracao publica do Supabase.");
+  }
+
+  const config = await response.json();
+  if (!config?.url || !config?.anonKey) {
+    throw new Error("Configure NEXT_PUBLIC_SUPABASE_URL e NEXT_PUBLIC_SUPABASE_ANON_KEY.");
+  }
+
+  legacySupabaseClient = window.supabase.createClient(config.url, config.anonKey);
+  return legacySupabaseClient;
+}
+
+function getLegacyAuthQueryValue(key) {
+  const params = new URLSearchParams(window.location.search);
+  return params.get(key) || "";
+}
+
+function getLegacyAuthNextPath() {
+  return legacyAuthNextOverride || getLegacyAuthQueryValue("next") || "/legacy/index.html?skipSplash=1";
+}
+
+function setLegacyAuthStatus(targetId, message, type) {
+  const statusEl = document.getElementById(targetId);
+  if (!statusEl) {
+    return;
+  }
+
+  if (!message) {
+    statusEl.hidden = true;
+    statusEl.textContent = "";
+    statusEl.classList.remove("error", "success");
+    return;
+  }
+
+  statusEl.hidden = false;
+  statusEl.textContent = message;
+  statusEl.classList.remove("error", "success");
+  statusEl.classList.add(type || "error");
+}
+
+function setLegacyAuthMode(mode) {
+  const loginView = document.getElementById("legacy-auth-login");
+  const signupView = document.getElementById("legacy-auth-signup");
+  if (!loginView || !signupView) {
+    return;
+  }
+
+  const isLogin = mode !== "signup";
+  loginView.hidden = !isLogin;
+  signupView.hidden = isLogin;
+}
+
+function openLegacyAuthModal(mode, nextPath) {
+  const backdrop = document.getElementById("legacy-auth-backdrop");
+  if (!backdrop) {
+    return;
+  }
+
+  legacyAuthNextOverride = nextPath || "";
+
+  setLegacyAuthStatus("legacy-auth-login-status", "", "");
+  setLegacyAuthStatus("legacy-auth-signup-status", "", "");
+  setLegacyAuthMode(mode);
+  backdrop.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function closeLegacyAuthModal() {
+  const backdrop = document.getElementById("legacy-auth-backdrop");
+  if (!backdrop) {
+    return;
+  }
+
+  backdrop.hidden = true;
+  document.body.style.overflow = "";
+  legacyAuthNextOverride = "";
+}
+
+async function submitLegacyLogin() {
+  const email = (document.getElementById("legacy-login-email")?.value || "").trim();
+  const password = document.getElementById("legacy-login-password")?.value || "";
+  const btn = document.getElementById("legacy-login-submit");
+
+  if (!email || !password) {
+    setLegacyAuthStatus("legacy-auth-login-status", "Preencha email e senha.", "error");
+    return;
+  }
+
+  try {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Entrando...";
+    }
+
+    setLegacyAuthStatus("legacy-auth-login-status", "", "");
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ email, password })
+    });
+
+    const payload = await response.json();
+    if (!response.ok) {
+      setLegacyAuthStatus("legacy-auth-login-status", payload?.error || "Falha no login.", "error");
+      return;
+    }
+
+    setLegacyAuthStatus("legacy-auth-login-status", "Login realizado com sucesso.", "success");
+    localStorage.setItem(LEGACY_GUIDE_ACCESS_KEY, "1");
+    const target = getLegacyAuthNextPath();
+    window.location.href = target.includes("skipSplash=1")
+      ? target
+      : "/legacy/index.html?skipSplash=1";
+  } catch (error) {
+    setLegacyAuthStatus("legacy-auth-login-status", error.message || "Falha no login.", "error");
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Entrar";
+    }
+  }
+}
+
+async function submitLegacySignup() {
+  const fullName = (document.getElementById("legacy-signup-name")?.value || "").trim();
+  const email = (document.getElementById("legacy-signup-email")?.value || "").trim();
+  const password = document.getElementById("legacy-signup-password")?.value || "";
+  const btn = document.getElementById("legacy-signup-submit");
+
+  if (!fullName || !email || !password) {
+    setLegacyAuthStatus("legacy-auth-signup-status", "Preencha nome, email e senha.", "error");
+    return;
+  }
+
+  try {
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = "Cadastrando...";
+    }
+
+    setLegacyAuthStatus("legacy-auth-signup-status", "", "");
+    const supabaseClient = await getLegacySupabaseClient();
+    const { error } = await supabaseClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName }
+      }
+    });
+
+    if (error) {
+      setLegacyAuthStatus("legacy-auth-signup-status", error.message, "error");
+      return;
+    }
+
+    setLegacyAuthStatus("legacy-auth-signup-status", "Conta criada. Agora faça login.", "success");
+    setLegacyAuthMode("login");
+  } catch (error) {
+    setLegacyAuthStatus("legacy-auth-signup-status", error.message || "Falha no cadastro.", "error");
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = "Cadastrar";
+    }
+  }
+}
+
+async function submitLegacyLogout() {
+  const logoutBtn = document.getElementById("legacy-logout-btn");
+
+  try {
+    if (logoutBtn) {
+      logoutBtn.disabled = true;
+      logoutBtn.textContent = "Saindo...";
+    }
+
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      }
+    });
+
+    try {
+      const supabaseClient = await getLegacySupabaseClient();
+      await supabaseClient.auth.signOut();
+    } catch (_) {
+      // Evita bloquear o logout se o cliente browser nao estiver disponivel.
+    }
+
+    localStorage.removeItem(LEGACY_GUIDE_ACCESS_KEY);
+    window.location.href = "/legacy/index.html?auth=login";
+  } catch (_) {
+    localStorage.removeItem(LEGACY_GUIDE_ACCESS_KEY);
+    window.location.href = "/legacy/index.html?auth=login";
+  } finally {
+    if (logoutBtn) {
+      logoutBtn.disabled = false;
+      logoutBtn.textContent = "Sair";
+    }
+  }
+}
+
+function initLegacyAuthModal() {
+  const loginBtn = document.getElementById("sp-login-btn");
+  const signupBtn = document.getElementById("sp-signup-btn");
+  const logoutBtn = document.getElementById("legacy-logout-btn");
+  const closeBtn = document.getElementById("legacy-auth-close");
+  const backdrop = document.getElementById("legacy-auth-backdrop");
+  const openSignupBtn = document.getElementById("legacy-open-signup");
+  const openLoginBtn = document.getElementById("legacy-open-login");
+  const loginSubmitBtn = document.getElementById("legacy-login-submit");
+  const signupSubmitBtn = document.getElementById("legacy-signup-submit");
+
+  if (loginBtn) {
+    loginBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      openLegacyAuthModal("login", "/guia");
+    });
+  }
+
+  if (signupBtn) {
+    signupBtn.addEventListener("click", (event) => {
+      event.preventDefault();
+      openLegacyAuthModal("signup");
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", submitLegacyLogout);
+  }
+
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeLegacyAuthModal);
+  }
+
+  if (backdrop) {
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) {
+        closeLegacyAuthModal();
+      }
+    });
+  }
+
+  if (openSignupBtn) {
+    openSignupBtn.addEventListener("click", () => {
+      setLegacyAuthMode("signup");
+    });
+  }
+
+  if (openLoginBtn) {
+    openLoginBtn.addEventListener("click", () => {
+      setLegacyAuthMode("login");
+    });
+  }
+
+  if (loginSubmitBtn) {
+    loginSubmitBtn.addEventListener("click", submitLegacyLogin);
+  }
+
+  if (signupSubmitBtn) {
+    signupSubmitBtn.addEventListener("click", submitLegacySignup);
+  }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeLegacyAuthModal();
+    }
+  });
+
+}
+
+function setLegacyMedStatus(message, type) {
+  const statusEl = document.getElementById("legacy-med-status");
+  if (!statusEl) {
+    return;
+  }
+
+  if (!message) {
+    statusEl.hidden = true;
+    statusEl.textContent = "";
+    statusEl.classList.remove("error", "success");
+    return;
+  }
+
+  statusEl.hidden = false;
+  statusEl.textContent = message;
+  statusEl.classList.remove("error", "success");
+  statusEl.classList.add(type || "error");
+}
+
+function openLegacyMedModal() {
+  const backdrop = document.getElementById("legacy-med-backdrop");
+  if (!backdrop) {
+    return;
+  }
+  setLegacyMedStatus("", "");
+  backdrop.hidden = false;
+  document.body.style.overflow = "hidden";
+}
+
+function closeLegacyMedModal() {
+  const backdrop = document.getElementById("legacy-med-backdrop");
+  if (!backdrop) {
+    return;
+  }
+  backdrop.hidden = true;
+  document.body.style.overflow = "";
+}
+
+function clearLegacyMedForm() {
+  [
+    "legacy-med-nome",
+    "legacy-med-quantidade",
+    "legacy-med-apresentacao",
+    "legacy-med-indicacao",
+    "legacy-med-respaldo"
+  ].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.value = "";
+    }
+  });
+
+  const categoriaEl = document.getElementById("legacy-med-categoria");
+  const unidadeEl = document.getElementById("legacy-med-unidade");
+  if (categoriaEl) categoriaEl.value = "IST";
+  if (unidadeEl) unidadeEl.value = "mg";
+}
+
+async function submitLegacyMedicamento() {
+  const nome = (document.getElementById("legacy-med-nome")?.value || "").trim();
+  const categoriaLabel = document.getElementById("legacy-med-categoria")?.value || "IST";
+  const quantidadeRaw = document.getElementById("legacy-med-quantidade")?.value || "";
+  const unidade = document.getElementById("legacy-med-unidade")?.value || "mg";
+  const apresentacao = (document.getElementById("legacy-med-apresentacao")?.value || "").trim();
+  const indicacao = (document.getElementById("legacy-med-indicacao")?.value || "").trim();
+  const respaldoLegal = (document.getElementById("legacy-med-respaldo")?.value || "").trim();
+  const submitBtn = document.getElementById("legacy-med-submit");
+
+  if (!nome || !quantidadeRaw || !apresentacao || !indicacao || !respaldoLegal) {
+    setLegacyMedStatus("Preencha todos os campos obrigatórios.", "error");
+    return;
+  }
+
+  const quantidade = Number(quantidadeRaw);
+  if (!Number.isFinite(quantidade)) {
+    setLegacyMedStatus("Quantidade/concentração inválida.", "error");
+    return;
+  }
+
+  try {
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Salvando...";
+    }
+    setLegacyMedStatus("", "");
+
+    const supabaseClient = await getLegacySupabaseClient();
+    const payload = {
+      nome,
+      categoria: categoriaLabel,
+      quantidade,
+      unidade,
+      apresentacao,
+      indicacao,
+      respaldo_legal: respaldoLegal
+    };
+
+    let insertError = null;
+    let usedFallbackTable = false;
+
+    const { error } = await supabaseClient.from("medicamentos").insert(payload);
+    insertError = error;
+
+    if (insertError && /Could not find the table|relation .* does not exist|row-level security policy/i.test(insertError.message || "")) {
+      usedFallbackTable = true;
+      const fallbackPayload = {
+        nome,
+        concentracao: `${quantidadeRaw} ${unidade}`,
+        apresentacao,
+        indicacao,
+        protocolo: `[${categoriaLabel}] ${respaldoLegal}`
+      };
+      const fallback = await supabaseClient.from("custom_medicamentos").insert(fallbackPayload);
+      insertError = fallback.error;
+    }
+
+    const insertErrorMessage = insertError?.message || "";
+    const blockedByRls = /row-level security policy/i.test(insertErrorMessage);
+
+    if (insertError && !blockedByRls) {
+      setLegacyMedStatus(insertErrorMessage || "Falha ao salvar no Supabase.", "error");
+      return;
+    }
+
+    const categoriaId = MED_CATEGORIA_ID_MAP[categoriaLabel] || "Outros";
+    const medViewModel = {
+      n: nome,
+      c: `${quantidadeRaw} ${unidade}`,
+      a: apresentacao,
+      u: indicacao,
+      cat: categoriaId,
+      r: respaldoLegal
+    };
+
+    if (blockedByRls) {
+      saveLegacyLocalCustomMed(medViewModel);
+    }
+
+    MEDS.unshift(medViewModel);
+
+    renderizarMeds();
+    clearLegacyMedForm();
+    closeLegacyMedModal();
+    if (blockedByRls) {
+      showToast("✓ Salvo localmente no navegador (RLS ativo no Supabase).");
+    } else {
+      showToast(usedFallbackTable
+        ? "✓ Medicamento salvo (modo compatibilidade)."
+        : "✓ Medicamento cadastrado com sucesso!");
+    }
+  } catch (error) {
+    setLegacyMedStatus(error.message || "Erro inesperado ao cadastrar medicamento.", "error");
+  } finally {
+    if (submitBtn) {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Salvar medicamento";
+    }
+  }
+}
+
+function initLegacyMedModal() {
+  const openBtn = document.getElementById("open-med-modal-btn");
+  const closeBtn = document.getElementById("legacy-med-close");
+  const cancelBtn = document.getElementById("legacy-med-cancel");
+  const submitBtn = document.getElementById("legacy-med-submit");
+  const backdrop = document.getElementById("legacy-med-backdrop");
+
+  if (openBtn) openBtn.addEventListener("click", openLegacyMedModal);
+  if (closeBtn) closeBtn.addEventListener("click", closeLegacyMedModal);
+  if (cancelBtn) cancelBtn.addEventListener("click", closeLegacyMedModal);
+  if (submitBtn) submitBtn.addEventListener("click", submitLegacyMedicamento);
+
+  if (backdrop) {
+    backdrop.addEventListener("click", (event) => {
+      if (event.target === backdrop) {
+        closeLegacyMedModal();
+      }
+    });
+  }
+}
+
+document.body.classList.add('splash-active');
+if (getLegacyAuthQueryValue("skipSplash") === "1" || localStorage.getItem(LEGACY_GUIDE_ACCESS_KEY) === "1") {
+  const splash = document.getElementById("splash");
+  if (splash) {
+    splash.style.display = "none";
+  }
+  document.body.classList.remove("splash-active");
+}
+initLegacyAuthModal();
+initLegacyMedModal();
+loadLegacyLocalCustomMeds();
 renderizarMeds();
