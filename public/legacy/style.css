@@ -1363,14 +1363,16 @@ body.splash-active {
   top: 50%;
   right: 8px;
   transform: translateY(-50%);
-  width: 30px;
+  min-width: 68px;
   height: 30px;
+  padding: 0 8px;
   border: 1px solid #e2e6ed;
   border-radius: 999px;
   background: #fff;
   color: #64748b;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.72rem;
+  font-weight: 700;
   line-height: 1;
 }
 .legacy-auth-pass-toggle:hover {
